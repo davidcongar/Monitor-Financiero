@@ -1,0 +1,53 @@
+<div x-data="{activeDefTab:'todos'}">
+    <ul class="flex flex-wrap text-xs text-center dark:border-gray/20 border-b border-lightgray/10">
+        <li class="">
+            <a href="javaScript:;" @click="activeDefTab = 'todos'; $dispatch('filter-status', 'todos')"
+                :class="activeDefTab === 'todos' ? 'bg-primary/10 text-primary' : 'bg-transparent text-gray hover:bg-primary/10 hover:text-primary'"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-t-lg">
+                Todos
+            </a>
+        </li>
+        <li class="">
+            <a href="javaScript:;"
+                @click="$dispatch('filter-status', 'En revisión'); activeDefTab = 'En_revision'"
+                :class="activeDefTab === 'En_revision' ? 'bg-primary/10 text-primary' : 'bg-transparent text-gray hover:bg-primary/10 hover:text-primary'"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-t-lg">
+                Módulos
+                <span>
+                    {{ en_revision }}
+                </span>
+            </a>
+        </li>
+        <li class="">
+            <a href="javaScript:;" @click="activeDefTab = 'bases_de_datos'; $dispatch('filter-status', 'bases_de_datos')"
+                :class="activeDefTab === 'bases_de_datos' ? 'bg-primary/10 text-primary' : 'bg-transparent text-gray hover:bg-primary/10 hover:text-primary'"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-t-lg">
+                Bases de datos
+                <span>
+                    {{ bases_de_datos }}
+                </span>
+            </a>
+        </li>
+        <li class="">
+            <a href="javaScript:;"
+                @click="activeDefTab = 'acciones'; $dispatch('filter-status', 'acciones')"
+                :class="activeDefTab === 'acciones' ? 'bg-primary/10 text-primary' : 'bg-transparent text-gray hover:bg-primary/10 hover:text-primary'"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-t-lg">
+                Acciones
+                <span>
+                    {{ acciones }}
+                </span>
+            </a>
+        </li>
+        <li class="">
+            <a href="javaScript:;" @click="activeDefTab = 'tableros_reportes'; $dispatch('filter-status', 'tableros_reportes')"
+                :class="activeDefTab === 'tableros_reportes' ? 'bg-primary/10 text-primary' : 'bg-transparent text-gray hover:bg-primary/10 hover:text-primary'"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-t-lg">
+                Tableros y reportes
+                <span>
+                    {{ tableros_reportes }}
+                </span>
+            </a>
+        </li>
+    </ul>
+</div>

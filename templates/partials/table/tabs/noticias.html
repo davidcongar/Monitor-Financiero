@@ -1,0 +1,23 @@
+<div x-data="{activeDefTab:'Sin revisar'}">
+    <ul class="flex flex-wrap text-xs text-center dark:border-gray/20 border-b border-lightgray/10">
+        <li class="">
+            <a href="javaScript:;"
+                @click="$dispatch('filter-status', 'Sin revisar'); activeDefTab = 'Sin revisar'"
+                :class="activeDefTab === 'Sin revisar' ? 'bg-primary/10 text-primary' : 'bg-transparent text-gray hover:bg-primary/10 hover:text-primary'"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-t-lg">
+                Sin revisar
+                <span>
+                    {{ data_tabs["Sin revisar"] }}
+                </span>
+            </a>
+        </li>
+        <li class="">
+            <a href="javaScript:;"
+                @click="$dispatch('filter-status', 'Revisada'); activeDefTab = 'revisada'"
+                :class="activeDefTab === 'revisada' ? 'bg-primary/10 text-primary' : 'bg-transparent text-gray hover:bg-primary/10 hover:text-primary'"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-t-lg">
+                Revisadas
+            </a>
+        </li>
+    </ul>
+</div>

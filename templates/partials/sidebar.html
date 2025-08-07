@@ -1,0 +1,226 @@
+<nav
+    class="sidebar fixed z-50 flex-none w-[226px] border-r-2 border-lightgray/[8%] dark:border-gray/20 transition-all duration-300">
+    <div class="bg-white dark:bg-dark h-full">
+        <div class="p-3.5 mt-3">
+            <a href="/" class="main-logo w-full">
+                <img src="/static/images/logo-light.png" class="mx-auto dark-logo h-12 logo dark:hidden"
+                    alt="logo" />
+                <img src="/static/images/logo-dark.png" class="mx-auto light-logo h-12 logo hidden dark:block"
+                    alt="logo" />
+                <img src="/static/images/logo-light.png" class="logo-icon h-8 mx-auto hidden" alt="">
+            </a>
+        </div>
+        <div class="flex items-center gap-2.5 py-2.5 pe-2.5">
+            <div class="h-[2px] bg-lightgray/10 dark:bg-gray/50 block flex-1"></div>
+            <button type="button" class="shrink-0 btn-toggle hover:text-primary duration-300"
+                @click="$store.app.toggleSidebar()">
+                <svg class="w-3.5" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path opacity="0.2"
+                        d="M5.46133 6.00002L11.1623 12L12.4613 10.633L8.05922 6.00002L12.4613 1.36702L11.1623 0L5.46133 6.00002Z"
+                        fill="currentColor" />
+                    <path d="M0 6.00002L5.70101 12L7 10.633L2.59782 6.00002L7 1.36702L5.70101 0L0 6.00002Z"
+                        fill="currentColor" />
+                </svg>
+            </button>
+        </div>
+        <div class="h-[calc(100vh-93px)] overflow-y-auto overflow-x-hidden space-y-16 px-4 pt-2 pb-4">
+            <ul class="relative flex flex-col gap-1 text-sm"
+                x-data="{ activeMenu: '{{activeMenu}}', activeItem: '{{activeItem}}' }">
+                <li class="menu nav-item">
+                    <a href="/" class="nav-link group" :class="{'active' : activeMenu === 'inicio'}">
+                        <div class="flex items-center">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M2 12.2039C2 9.91549 2 8.77128 2.5192 7.82274C3.0384 6.87421 3.98695 6.28551 5.88403 5.10813L7.88403 3.86687C9.88939 2.62229 10.8921 2 12 2C13.1079 2 14.1106 2.62229 16.116 3.86687L18.116 5.10812C20.0131 6.28551 20.9616 6.87421 21.4808 7.82274C22 8.77128 22 9.91549 22 12.2039V13.725C22 17.6258 22 19.5763 20.8284 20.7881C19.6569 22 17.7712 22 14 22H10C6.22876 22 4.34315 22 3.17157 20.7881C2 19.5763 2 17.6258 2 13.725V12.2039Z"
+                                    stroke="currentColor" stroke-width="1.5" />
+                                <path d="M9 16C9.85038 16.6303 10.8846 17 12 17C13.1154 17 14.1496 16.6303 15 16"
+                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                            </svg>
+                            <span class="pl-1.5">Inicio</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="menu nav-item">
+                    <a href="javaScript:;" class="nav-link group items-center justify-between"
+                        :class="{'active' : activeMenu === 'catalogos'}"
+                        @click="activeMenu === 'catalogos' ? activeMenu = null : activeMenu = 'catalogos'">
+                        <div class="flex items-center">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M19 16C19 18.8284 19 20.2426 18.1213 21.1213C17.2426 22 15.8284 22 13 22H11C8.17157 22 6.75736 22 5.87868 21.1213C5 20.2426 5 18.8284 5 16V12M5 8C5 5.17157 5 3.75736 5.87868 2.87868C6.75736 2 8.17157 2 11 2H13C15.8284 2 17.2426 2 18.1213 2.87868C19 3.75736 19 5.17157 19 8V12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M5 4.07617C4.02491 4.17208 3.36857 4.38885 2.87868 4.87873C2 5.75741 2 7.17163 2 10.0001V14.0001C2 16.8285 2 18.2427 2.87868 19.1214C3.36857 19.6113 4.02491 19.828 5 19.9239" stroke="currentColor" stroke-width="1.5"/>
+                                <path d="M19 4.07617C19.9751 4.17208 20.6314 4.38885 21.1213 4.87873C22 5.75741 22 7.17163 22 10.0001V14.0001C22 16.8285 22 18.2427 21.1213 19.1214C20.6314 19.6113 19.9751 19.828 19 19.9239" stroke="currentColor" stroke-width="1.5"/>
+                                <path d="M9 13H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M9 9H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M9 17H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                </svg>
+                                                                                       
+                            <span class="pl-1.5">Catálogos</span>
+                        </div>
+                        <div class="w-4 h-4 flex items-center justify-center dropdown-icon"
+                            :class="{'!rotate-180' : activeMenu === 'catalogos'}">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                                <path
+                                    d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </div>
+                    </a>
+                    <ul x-cloak x-show="activeMenu === 'catalogos'" x-collapse class="sub-menu flex flex-col gap-1">
+                        {% for original_name, formatted_name in table_names.items() %}
+                            {% if original_name in ('cuentas','categorias_de_gastos','categorias_de_ingresos')%}
+                                <li>
+                                    <a :class="{'active': activeItem === '{{ formatted_name|lower|replace(' ', '_') }}'}"
+                                        href="/dynamic/{{ original_name }}">{{ formatted_name }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="menu nav-item">
+                    <a href="javascript:;" class="nav-link group items-center justify-between"
+                        :class="{'active' : activeMenu === 'gastos'}"
+                        @click="activeMenu === 'gastos' ? activeMenu = null : activeMenu = 'gastos'">
+                        <div class="flex items-center">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M19 20V14M19 14L21 16M19 14L17 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M22 12C22 8.22876 22 6.34315 20.8284 5.17157C19.6569 4 17.7712 4 14 4M14 20H10C6.22876 20 4.34315 20 3.17157 18.8284C2 17.6569 2 15.7712 2 12C2 8.22876 2 6.34315 3.17157 5.17157C4.34315 4 6.22876 4 10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M10 16H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M13 16H12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M2 10L7 10M22 10L11 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                            <span class="pl-1.5">Gastos</span>
+                        </div>
+                        <div class="w-4 h-4 flex items-center justify-center dropdown-icon"
+                            :class="{'!rotate-180' : activeMenu === 'gastos'}">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                                <path
+                                    d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </div>
+                    </a>
+                    <ul x-cloak x-show="activeMenu === 'gastos'" x-collapse class="sub-menu flex flex-col gap-1">
+                        <li>
+                            <a :class="{'active': activeItem === 'tablero'}"
+                                href="/tableros/gastos">Tablero</a>
+                        </li>
+                        <li>
+                            <a :class="{'active': activeItem === 'gastos'}"
+                                href="/dynamic/gastos">Gastos</a>
+                        </li>
+                        <li>
+                            <a :class="{'active': activeItem === 'gastos_recurrentes'}"
+                                href="/dynamic/gastos_recurrentes">Gastos Recurentes</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="menu nav-item">
+                    <a href="javascript:;" class="nav-link group items-center justify-between"
+                        :class="{'active' : activeMenu === 'ingresos'}"
+                        @click="activeMenu === 'ingresos' ? activeMenu = null : activeMenu = 'ingresos'">
+                        <div class="flex items-center">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M19 14V20M19 20L21 18M19 20L17 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M22 12C22 8.22876 22 6.34315 20.8284 5.17157C19.6569 4 17.7712 4 14 4M14 20H10C6.22876 20 4.34315 20 3.17157 18.8284C2 17.6569 2 15.7712 2 12C2 8.22876 2 6.34315 3.17157 5.17157C4.34315 4 6.22876 4 10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M10 16H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M13 16H12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M2 10L7 10M22 10L11 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                            <span class="pl-1.5">Ingresos</span>
+                        </div>
+                        <div class="w-4 h-4 flex items-center justify-center dropdown-icon"
+                            :class="{'!rotate-180' : activeMenu === 'ingresos'}">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                                <path
+                                    d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </div>
+                    </a>
+                    <ul x-cloak x-show="activeMenu === 'ingresos'" x-collapse class="sub-menu flex flex-col gap-1">
+                        <li>
+                            <a :class="{'active': activeItem === 'tablero'}"
+                                href="/tableros/ingresos">Tablero</a>
+                        </li>
+                        <li>
+                            <a :class="{'active': activeItem === 'ingresos'}"
+                                href="/dynamic/ingresos">Ingresos</a>
+                        </li>
+                        <li>
+                            <a :class="{'active': activeItem === 'ingresos_recurrentes'}"
+                                href="/dynamic/ingresos_recurrentes">Ingresos Recurentes</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="menu nav-item">
+                    <a href="/dynamic/transferencias" class="nav-link group" :class="{'active' : activeMenu === 'transferencias'}">
+                        <div class="flex items-center">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10 4C6.22876 4 4.34315 4 3.17157 5.17157C2 6.34315 2 8.22876 2 12C2 15.7712 2 17.6569 3.17157 18.8284C4.34315 20 6.22876 20 10 20H11.5M14 4C17.7712 4 19.6569 4 20.8284 5.17157C21.8915 6.23467 21.99 7.8857 21.9991 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M15.5 14V20M15.5 20L17.5 18M15.5 20L13.5 18M20 20V14M20 14L22 16M20 14L18 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M10 16H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M2 10L7 10M22 10L11 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>                            
+                            </svg>
+                            <span class="pl-1.5">Transferencias</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="menu nav-item">
+                    <a href="javascript:;" class="nav-link group items-center justify-between"
+                        :class="{'active' : activeMenu === 'permisos'}"
+                        @click="activeMenu === 'permisos' ? activeMenu = null : activeMenu = 'permisos'">
+                        <div class="flex items-center">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="9" r="2" stroke="currentColor" stroke-width="1.5" />
+                                <path
+                                    d="M16 15C16 16.1046 16 17 12 17C8 17 8 16.1046 8 15C8 13.8954 9.79086 13 12 13C14.2091 13 16 13.8954 16 15Z"
+                                    stroke="currentColor" stroke-width="1.5" />
+                                <path
+                                    d="M3 10.4167C3 7.21907 3 5.62028 3.37752 5.08241C3.75503 4.54454 5.25832 4.02996 8.26491 3.00079L8.83772 2.80472C10.405 2.26824 11.1886 2 12 2C12.8114 2 13.595 2.26824 15.1623 2.80472L15.7351 3.00079C18.7417 4.02996 20.245 4.54454 20.6225 5.08241C21 5.62028 21 7.21907 21 10.4167C21 10.8996 21 11.4234 21 11.9914C21 14.4963 20.1632 16.4284 19 17.9041M3.19284 14C4.05026 18.2984 7.57641 20.5129 9.89856 21.5273C10.62 21.8424 10.9807 22 12 22C13.0193 22 13.38 21.8424 14.1014 21.5273C14.6796 21.2747 15.3324 20.9478 16 20.5328"
+                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                            </svg>
+                            <span class="pl-1.5">Permisos</span>
+                        </div>
+                        <div class="w-4 h-4 flex items-center justify-center dropdown-icon"
+                            :class="{'!rotate-180' : activeMenu === 'permisos'}">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                                <path
+                                    d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </div>
+                    </a>
+                    <ul x-cloak x-show="activeMenu === 'permisos'" x-collapse class="sub-menu flex flex-col gap-1">
+                        {% for original_name, formatted_name in table_names.items() %}
+                            {% if original_name in ('usuarios')%}
+                                <li>
+                                    <a :class="{'active': activeItem === '{{ formatted_name|lower|replace(' ', '_') }}'}"
+                                        href="/dynamic/{{ original_name }}">{{ formatted_name }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="menu nav-item">
+                    <a href="/dynamic/logs_auditoria" class="nav-link group" :class="{'active' : activeMenu === 'auditoria'}">
+                        <div class="flex items-center">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 4.00195C18.175 4.01406 19.3529 4.11051 20.1213 4.87889C21 5.75757 21 7.17179 21 10.0002V16.0002C21 18.8286 21 20.2429 20.1213 21.1215C19.2426 22.0002 17.8284 22.0002 15 22.0002H9C6.17157 22.0002 4.75736 22.0002 3.87868 21.1215C3 20.2429 3 18.8286 3 16.0002V10.0002C3 7.17179 3 5.75757 3.87868 4.87889C4.64706 4.11051 5.82497 4.01406 8 4.00195" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M10.5 14L17 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M7 14H7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M7 10.5H7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M7 17.5H7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M10.5 10.5H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M10.5 17.5H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M8 3.5C8 2.67157 8.67157 2 9.5 2H14.5C15.3284 2 16 2.67157 16 3.5V4.5C16 5.32843 15.3284 6 14.5 6H9.5C8.67157 6 8 5.32843 8 4.5V3.5Z" stroke="currentColor" stroke-width="1.5"/>
+                            </svg>
+                            <span class="pl-1.5">Auditoría</span>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

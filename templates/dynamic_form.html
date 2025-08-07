@@ -1,0 +1,236 @@
+{% extends './partials/layout1.html' %}
+<!-- templates/dynamic_form.html -->
+{% include 'partials/flash_alerts.html' %}
+{% block content %}
+{% include './partials/alerts.html' %}
+<!-- Breadcrumb -->
+{% include 'partials/table/breadcrumbs.html' %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<style>
+/* Default (light mode) styles */
+    .select2-container--default .select2-selection--multiple {
+        background-color: rgba(119, 128, 161, 0.08);
+        border-radius: 0.25rem;
+        border-width: 2px;
+        border-color: rgb(119 128 161 / 0.1);
+        font-size: 0.875rem;
+        color: #1f2937;
+    }
+
+    /* Selected items in Dark Mode */
+    .dark .select2-container--default .select2-selection__choice {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.3);
+        color: #e5e7eb;
+    }
+    /* Style for single select dropdown */
+    .select2-container--default .select2-selection--single {
+        background-color: rgba(119, 128, 161, 0.08);
+        border-radius: 0.25rem; /* rounded corners */
+        border-width: 2px;
+        border-color: rgb(119 128 161 / 0.1);
+        font-size: 0.875rem; /* Tailwind text-sm */
+        height: 2.5rem; /* optional: align with Tailwind h-10 */
+        display: flex;
+        align-items: center;
+    }
+
+    /* Dark mode selected item */
+    .dark .select2-container--default .select2-selection--single {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: #e5e7eb;
+    }
+    .dark .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #e5e7eb;
+    }
+
+</style>
+<div class="flex flex-col gap-5 min-h-[calc(100vh-188px)] sm:min-h-[calc(100vh-204px)]">
+    <div class="grid grid-cols-1 gap-5">
+        <div class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg">
+            <!-- Título del formulario -->
+            <h2 class="text-base font-semibold mb-4">
+                {{ action }} en {{ table_name|title_format }}
+            </h2>
+            <!-- Formulario -->
+            <form method="POST" class="space-y-4" id="dynamic_form"  action="/dynamic/{{ table_name }}/{{ 'editar?id=' ~ record.id if record else 'registrar' }}" enctype="multipart/form-data">
+                {% for column in columns %}
+                    {% if column != "id" %}
+                    <div class="space-y-2">
+                        <label for="{{ column|title_format }}" class="text-sm text-lightgray capitalize">
+                            {{ column|title_format }}
+                            {% if column in required_fields %}
+                                <span class="text-red-500">*</span>
+                            {% endif %}
+                        </label>
+                        {% if foreign_options is defined and column in foreign_options %}
+                        <!-- Multi - Select --> 
+                            {% if column in many_to_many_data%}
+                                {% for field, data in many_to_many_data.items() %}
+                                    <select id="{{ field }}" name="{{ field }}" class="js-example-basic-multiple"  multiple {% if column in required_fields %} required {% endif %}>
+                                        {% for option in data.options %}
+                                            <option value="{{ option.id }}" {% if option.id in data.selected %} selected {% endif %}>
+                                                {{ option.nombre if option.nombre else option.id }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                {% endfor %}
+                            {% elif column in multiple_choice_data%}
+                                {% for field, data in multiple_choice_data.items() %}
+                                    <select id="{{ field }}" name="{{ field }}" class="js-example-basic-multiple"  multiple {% if column in required_fields %} required {% endif %}>
+                                        {% for option in data.options %}
+                                            <option value="{{ option }}" {% if option.id in data.selected %} selected {% endif %}>
+                                                {{ option }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                {% endfor %}
+                            {%else%}
+                                <select id="{{ column }}" name="{{ column }}" class="searchable-select" {% if column in required_fields %} required {% endif %}>
+                                    <option value="">
+                                        Selecciona una opción
+                                    </option>
+                                    {% for option in foreign_options[column] %}
+                                        {% if column in ('estatus', 'estatus_ultima_ejecucion','gasto_compartido') %}
+                                            <option value="{{ option }}" {% if record and record[column] == option %}selected{% endif %}>
+                                                {{ option }}
+                                            </option>
+                                        {% elif column in ('id_desarrollador','id_responsable') %}
+                                            <option value="{{ option.id }}" {% if record and record[column] == option.id %}selected{% endif %}>
+                                                {{ option.nombre_completo if option.nombre_completo else option.id }}
+                                            </option>
+                                        {% else %}
+                                            <option value="{{ option.id }}" {% if record and record[column] == option.id %}selected{% endif %}>
+                                                {{ option.nombre if option.nombre else option.id }}
+                                            </option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            {%endif%}
+                        <!-- Select -->
+                        {% else %}
+                            {% if "dd" in column %}
+                                <!-- Renderizar el campo como un select multiple -->
+                                <select name="{{ column }}"  id="{{ column  }}" class="js-example-basic-multiple" multiple="multiple" {% if column in required_fields %} required {% endif %}>
+                                </select>
+                            {% else %}
+                                {% if "fecha" in column %}
+                                <!-- Campo de fecha -->
+                                <input type="date" id="{{ column }}" name="{{ column }}" value="{{ record[column]|default('', true) if record else '' }}" class="form-input rounded-lg w-full" {% if column in required_fields %} required {% endif %}>
+                                {% else %}
+                                <!-- Campo de texto normal -->
+                                <input type="text" id="{{ column }}" name="{{ column }}" value="{{ record[column]}}"class="form-input rounded-lg w-full" {% if column in required_fields %} required {% endif %}>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                {% if table_name == "archivos" %}
+                    <div class="flex items-center gap-2 mt-4">
+                        <input type="file" id="file-upload" name="archivo" class="hidden">
+                        <label for="file-upload"
+                            class="btn flex items-center gap-2 bg-primary border border-primary rounded-md text-white transition-all duration-300 hover:bg-primary/[0.85] hover:border-primary/[0.85] cursor-pointer">
+                            Seleccionar archivo
+                        </label>
+                        <span id="file-name" class="file-name text-gray-500 ml-2">
+                            No se ha seleccionado ningún archivo
+                        </span>
+                        <button type="button" id="delete-file-btn"
+                            class="flex items-center justify-center text-red-500 hover:text-red-700 p-2 rounded-full hover:opacity-80 rotate-0 hover:rotate-180 transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5">
+                                <path
+                                    d="M12.0007 10.5865L16.9504 5.63672L18.3646 7.05093L13.4149 12.0007L18.3646 16.9504L16.9504 18.3646L12.0007 13.4149L7.05093 18.3646L5.63672 16.9504L10.5865 12.0007L5.63672 7.05093L7.05093 5.63672L12.0007 10.5865Z"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </button>
+                    </div>
+                {% endif %}
+
+                <!-- Botones de acción -->
+                <div class="flex items-center gap-4">
+                    <button type="submit"
+                        class="btn border text-primary border-transparent rounded-md transition-all duration-300 hover:text-white hover:bg-primary bg-primary/10">
+                        Guardar
+                    </button>
+                    <a href="{{ url_for('dynamic.tabla', table_name=table_name) }}"
+                    class="btn border text-danger border-transparent rounded-md transition-all duration-300 hover:text-white hover:bg-danger bg-danger/10">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.js-example-basic-multiple').select2({
+            width: '100%',
+            dropdownAutoWidth: true,
+        });
+    });
+    $(document).ready(function() {
+        $('.searchable-select').select2({
+        width: '100%'
+        });
+    });
+</script>
+<script>
+    // Upfecha the span with the selected file name
+    document.getElementById("file-upload").addEventListener("change", function () {
+        const fileNameSpan = document.getElementById("file-name");
+        const fileName = this.files[0]?.name || "No se ha seleccionado ningún archivo";
+        fileNameSpan.textContent = fileName;
+    });
+
+    // Clear the file input when the delete button is clicked
+    document.getElementById("delete-file-btn").addEventListener("click", function () {
+        const fileInput = document.getElementById("file-upload");
+        fileInput.value = ""; // Clear the file input
+        document.getElementById("file-name").textContent = "No se ha seleccionado ningún archivo";
+    });
+</script>
+<script src="/static/js/archivos_multiples.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const params = new URLSearchParams(window.location.search);
+
+    params.forEach((value, key) => {
+        let field = document.querySelector(`[name="${key}"]`);
+        if (!field) return;
+
+        if (field.tagName === "SELECT") {
+            if (field.multiple) {
+                let values = value.split(",");
+                for (let opt of field.options) {
+                    if (values.includes(opt.textContent.trim())) {
+                        opt.selected = true;
+                    }
+                }
+            } else {
+                for (let opt of field.options) {
+                    if (opt.textContent.trim() === value) {
+                        opt.selected = true;
+                        break;
+                    }
+                }
+            }
+            $(field).trigger('change'); // Refresh Select2 UI if applied
+
+        } else if (field.type === "checkbox" || field.type === "radio") {
+            field.checked = (field.value === value);
+        } else {
+            field.value = value;
+        }
+    });
+});
+</script>
+
+
+{% if javascript %}
+    <script src="/static/js/forms_validations/transferencias_de_inventario.js"></script>
+{% endif %}
+{% endblock content %}
