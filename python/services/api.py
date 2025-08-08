@@ -128,7 +128,7 @@ def apple_pay():
                     id_visualizacion=id_visualizacion,
                     id_cuenta=cuenta.id,
                     id_categoria_de_gasto=categoria_de_gasto.id,
-                    id_negocio_apple_pay=new_negocio.id,
+                    id_negocio_apple_pay=negocio_apple_pay.id if negocio_apple_pay else new_negocio.id,
                     gasto_compartido='No',
                     pagos_mensuales=1,
                     importe=float(importe) if importe is not None else None,  # if your column is Float

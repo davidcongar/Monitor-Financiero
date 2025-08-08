@@ -1,11 +1,8 @@
 
 from python.models.modelos import *
-from sqlalchemy import String, Text, or_,func
+from sqlalchemy import String, Text, or_,func,Integer, Float, Numeric
 from sqlalchemy.sql import case
 from flask import session,flash
-from datetime import datetime
-from sqlalchemy import String, Text, Integer, Float, Numeric, or_
-import re
 import re
 import json
 from datetime import date, datetime

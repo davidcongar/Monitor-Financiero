@@ -7,6 +7,7 @@ from flask import Blueprint, flash, jsonify, redirect, render_template, request,
 from python.models import db
 from python.models.modelos import *
 from python.services.funciones_auxiliares import *
+from python.services.funciones_tablas import *
 from python.services.authentication import *
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.orm.dynamic import AppenderQuery
@@ -113,8 +114,9 @@ def formulario(table_name):
     # edicion
     record_id = request.args.get("id")
     if record_id!=None:
-        accion="Editar"
         record = model.query.get(record_id)
+        nombre = getattr(record, "nombre", None)
+        accion = f"Editar registro: {nombre}" if nombre else "Editar registro "+ str(record.id_visualizacion)
         if not record:
             flash(f"Registro con ID {record_id} no encontrado en '{table_name}'.", "danger")
             return redirect(url_for("dynamic.tabla", table_name=table_name))
@@ -410,6 +412,7 @@ def editar(table_name):
                             # Assign normal fields
                             setattr(record, key, value[0] if isinstance(value, list) and len(value) == 1 else value)
             db.session.commit()
+            edit_on_success(table_name,record.id)
             flash(f"Registro actualizado exitosamente en '{table_name.replace('_', ' ').capitalize()}'.", "success")
         except Exception as e:
             db.session.rollback()
