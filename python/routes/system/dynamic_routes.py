@@ -245,7 +245,7 @@ def datos(table_name):
                 join_model = table
 
             # Now the join uses the correct id_column for this alias
-            query = query.join(
+            query = query.outerjoin(
                 join_model, id_column == getattr(model, field)
             ).add_columns(
                 name_column.label(f"{field}_{name_column.key}")
@@ -451,7 +451,7 @@ def datos_registro(table_name,id_registro):
                 join_model = table
 
             # JOIN and add column with alias
-            query = query.join(join_model, id_column == getattr(model, field)).add_columns(
+            query = query.outerjoin(join_model, id_column == getattr(model, field)).add_columns(
                 name_column.label(f"{field}_{name_column.key}")
             )
 

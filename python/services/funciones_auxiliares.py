@@ -150,3 +150,29 @@ def to_jsonable(v):
 def rowmapping_to_dict(rm):
     # rm is a RowMapping
     return {k: to_jsonable(v) for k, v in rm.items()}
+
+from decimal import Decimal, InvalidOperation
+import re
+
+def parse_money(value):
+    if value is None:
+        return None
+    if isinstance(value, (int, float, Decimal)):
+        return Decimal(str(value))
+    if isinstance(value, str):
+        s = value.strip()
+        # remove everything except digits, decimal separators, minus sign
+        s = re.sub(r'[^0-9,.\-]', '', s)
+
+        # Handle common formats:
+        # If there's a comma but no dot, treat comma as decimal sep (e.g., "45,50")
+        if ',' in s and '.' not in s:
+            s = s.replace('.', '').replace(',', '.')
+        else:
+            # Otherwise drop thousands commas (e.g., "1,234.56" -> "1234.56")
+            s = s.replace(',', '')
+
+        try:
+            return Decimal(s)
+        except InvalidOperation:
+            raise ValueError(f"importe value '{value}' is not a valid number")

@@ -31,9 +31,9 @@ class IngresosRecurrentes(db.Model,BaseMixin,AuditMixin):
 class Gastos(db.Model,BaseMixin,AuditMixin):
     id_cuenta = db.Column(db.UUID,db.ForeignKey('cuentas.id'),nullable=False)
     id_categoria_de_gasto = db.Column(db.UUID,db.ForeignKey('categorias_de_gastos.id'),nullable=False)
+    id_negocio_apple_pay = db.Column(db.UUID,db.ForeignKey('negocios_apple_pay.id'),nullable=True)
     gasto_compartido = db.Column(db.String(255))
     categoria_apple_pay=db.Column(db.String(255))
-    negocio=db.Column(db.String(255))
     pagos_mensuales=db.Column(db.Integer,default=1)
     fecha = db.Column(db.Date,nullable=False)
     importe = db.Column(db.Float,nullable=False)
@@ -41,6 +41,7 @@ class Gastos(db.Model,BaseMixin,AuditMixin):
 
     cuenta = db.relationship("Cuentas", backref="gastos", lazy=True)
     categoria = db.relationship("CategoriasDeGastos", backref="gastos", lazy=True)
+    negocio = db.relationship("NegociosApplePay", backref="gastos", lazy=True)
 
 # Recurring gastos model
 class GastosRecurrentes(db.Model,BaseMixin,AuditMixin):

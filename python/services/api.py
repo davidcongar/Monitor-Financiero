@@ -8,6 +8,7 @@ from python.services.authentication import *
 import io
 from PIL import Image, ImageDraw, ImageFont
 from python.services.funciones_rutas_dinamicas import *
+import traceback
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 
@@ -87,26 +88,71 @@ def dynamic_data(table_name):
 @api_bp.route('/apple_pay',methods=['GET', 'POST'])
 def apple_pay():
     json_data = request.json
-    auth=api_login(json_data)
-    if auth['message']=='Credenciales validas':
-        id_usuario=json_data.get('id_usuario')
-        importe=json_data.get('importe')
-        fecha=json_data.get('fecha')
-        negocio=json_data.get('negocio')
-        id_cuenta=json_data.get('id_cuenta')
-        notas=json_data.get('notas')
-        id_categoria_de_gasto=json_data.get('id_categoria_de_gasto')
-        id_visualizacion=Gastos.query.filter_by(id_usuario=id_usuario).with_entities(func.max(Gastos.id_visualizacion)).scalar()+1
-        new_record = Gastos(id_usuario=id_usuario,id_visualizacion=id_visualizacion,id_cuenta=id_cuenta,id_categoria_de_gasto=id_categoria_de_gasto,categoria_apple_pay=negocio,gasto_compartido='No',pagos_mensuales=1,importe=importe,fecha=fecha,negocio=negocio,notas=notas)
-        db.session.add(new_record)
-        db.session.commit() 
-        return jsonify({
-            'message': f'Gasto creado ID: {new_record.id}',
-            'id': str(new_record.id)
-        })
+    id_usuario=json_data.get('id_usuario')
+    usuario=Usuarios.query.filter_by(id=id_usuario).first()
+    if usuario:
+        correo_usuario=usuario.correo_electronico
+        try:
+            auth=api_login(json_data)
+            if auth['message']=='Credenciales validas':
+                id_usuario=json_data.get('id_usuario')
+                importe=parse_money(json_data.get('importe'))
+                fecha=json_data.get('fecha')
+                cuenta=json_data.get('cuenta')
+                negocio=json_data.get('negocio')
+                cuenta=Cuentas.query.filter_by(id_usuario=id_usuario,nombre_apple_pay=cuenta).first()
+                negocio_apple_pay=NegociosApplePay.query.filter_by(id_usuario=id_usuario,nombre=negocio).first()
+                if negocio_apple_pay:
+                    categoria_de_gasto=CategoriasDeGastos.query.filter_by(id=negocio_apple_pay.id_categoria_de_gasto).first()
+                else:
+                    categoria_de_gasto=CategoriasDeGastos.query.filter_by(id_usuario=id_usuario,nombre='Apple Pay').first()
+                    id_visualizacion=NegociosApplePay.query.filter_by(id_usuario=id_usuario).with_entities(func.max(NegociosApplePay.id_visualizacion)).scalar()
+                    if id_visualizacion:
+                        id_visualizacion=id_visualizacion+1
+                    else:
+                        id_visualizacion=1
+                    new_negocio=NegociosApplePay(
+                        id_usuario=id_usuario,
+                        id_visualizacion=id_visualizacion,
+                        nombre=negocio
+                    )
+                    db.session.add(new_negocio)
+                    db.session.flush()
+                id_visualizacion=Gastos.query.filter_by(id_usuario=id_usuario).with_entities(func.max(Gastos.id_visualizacion)).scalar()
+                if id_visualizacion:
+                    id_visualizacion=id_visualizacion+1
+                else:
+                    id_visualizacion=1
+                new_record = Gastos(
+                    id_usuario=id_usuario,
+                    id_visualizacion=id_visualizacion,
+                    id_cuenta=cuenta.id,
+                    id_categoria_de_gasto=categoria_de_gasto.id,
+                    id_negocio_apple_pay=new_negocio.id,
+                    gasto_compartido='No',
+                    pagos_mensuales=1,
+                    importe=float(importe) if importe is not None else None,  # if your column is Float
+                    fecha=fecha
+                    )
+                db.session.add(new_record)
+                db.session.commit() 
+                return jsonify({
+                    'message': f'Gasto creado ID: {new_record.id}',
+                    'id': str(new_record.id)
+                })
+            else:
+                data={'message':'Credenciales no validas'}
+                apple_pay_email(correo_usuario,'Credenciales no válidas','No aplica')
+                return data
+        except Exception as e:
+            db.session.rollback()
+            tb = traceback.format_exc()
+            apple_pay_email(correo_usuario,'Favor de revisar la automatización de IOS.',tb)
+            data={'message':'Error'}
+            return data
     else:
-        data={'message':'Credenciales no validas'}
-        return data
+        data={'message':'Usuario no existe'}
+        return data       
 
 
 def default_to_dict(obj):

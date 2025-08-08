@@ -68,7 +68,7 @@
                     </a>
                     <ul x-cloak x-show="activeMenu === 'catalogos'" x-collapse class="sub-menu flex flex-col gap-1">
                         {% for original_name, formatted_name in table_names.items() %}
-                            {% if original_name in ('cuentas','categorias_de_gastos','categorias_de_ingresos')%}
+                            {% if original_name in ('cuentas','categorias_de_gastos','categorias_de_ingresos','negocios_apple_pay')%}
                                 <li>
                                     <a :class="{'active': activeItem === '{{ formatted_name|lower|replace(' ', '_') }}'}"
                                         href="/dynamic/{{ original_name }}">{{ formatted_name }}</a>

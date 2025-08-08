@@ -11,6 +11,7 @@ def get_joins():
         "id_cuenta_entrada": (Cuentas, Cuentas.id, Cuentas.nombre),
         "id_categoria_de_gasto": (CategoriasDeGastos, CategoriasDeGastos.id, CategoriasDeGastos.nombre),
         "id_categoria_de_ingreso": (CategoriasDeIngresos, CategoriasDeIngresos.id, CategoriasDeIngresos.nombre),
+        "id_negocio_apple_pay": (NegociosApplePay, NegociosApplePay.id, NegociosApplePay.nombre),
     }
     return joins
 
@@ -28,7 +29,7 @@ def get_foreign_options():
         "id_categoria_de_gasto": CategoriasDeGastos.query.filter_by(estatus="Activo",id_usuario=session['id_usuario']),
         "id_categoria_de_ingreso": CategoriasDeIngresos.query.filter_by(estatus="Activo",id_usuario=session['id_usuario']),
         "gasto_compartido":{"Si","No"},
-        "tipo":{"Débito","Crédito","Inversión","Inversión - Rendimientos"},
+        "tipo":{"Débito","Crédito","Inversión","Inversión - Rendimientos"}
     }
     return foreign_options
 
@@ -47,10 +48,11 @@ def get_multiple_choice_data():
 def get_columnas_tabla():
     columns = {
         "usuarios":['id_visualizacion','nombre','correo_electronico','estatus'],
-        "cuentas":['id_visualizacion','nombre','tipo','monto_credito','estatus'],
+        "cuentas":['id_visualizacion','nombre','nombre_apple_pay','tipo','monto_credito','estatus'],
         "categorias_de_gastos":['id_visualizacion','nombre','estatus'],
         "categorias_de_ingresos":['id_visualizacion','nombre','estatus'],
-        "gastos":['id_visualizacion','id_cuenta','id_categoria_de_gasto','gasto_compartido','pagos_mensuales','fecha','importe'],
+        "negocios_apple_pay":['id_visualizacion','nombre','id_categoria_de_gasto'],
+        "gastos":['id_visualizacion','id_cuenta','id_categoria_de_gasto','id_negocio_apple_pay','gasto_compartido','pagos_mensuales','fecha','importe'],
         "ingresos":['id_visualizacion','id_cuenta','id_categoria_de_ingreso','fecha','importe'],
         "gastos_recurrentes":['id_visualizacion','id_cuenta','id_categoria_de_gasto','gasto_compartido','importe'],
         "ingresos_recurrentes":['id_visualizacion','id_cuenta','id_categoria_de_ingreso','importe'],
@@ -62,10 +64,11 @@ def get_columnas_tabla():
 def get_orden_columnas_modal():
     columns = {
         "usuarios":['id','id_visualizacion','id','nombre','correo_electronico','estatus','fecha_de_creacion'],
-        "cuentas":['id','id_visualizacion','nombre','tipo','monto_credito','estatus','fecha_de_creacion','fecha_de_actualizacion'],
+        "cuentas":['id','id_visualizacion','nombre','nombre_apple_pay','tipo','monto_credito','estatus','fecha_de_creacion','fecha_de_actualizacion'],
         "categorias_de_gastos":['id','id_visualizacion','nombre','estatus','fecha_de_creacion','fecha_de_actualizacion'],
         "categorias_de_ingresos":['id','id_visualizacion','nombre','estatus','fecha_de_creacion','fecha_de_actualizacion'],
-        "gastos":['id','id_visualizacion','id_cuenta','id_categoria_de_gasto','categoria_apple_pay','negocio','gasto_compartido','pagos_mensuales','fecha','importe','notas','fecha_de_creacion','fecha_de_actualizacion'],
+        "negocios_apple_pay":['id','id_visualizacion','nombre','id_categoria_de_gasto','estatus','fecha_de_creacion','fecha_de_actualizacion'],
+        "gastos":['id','id_visualizacion','id_cuenta','id_categoria_de_gasto','categoria_apple_pay','id_negocio_apple_pay','gasto_compartido','pagos_mensuales','fecha','importe','notas','fecha_de_creacion','fecha_de_actualizacion'],
         "ingresos":['id','id_visualizacion','id_cuenta','id_categoria_de_ingreso','fecha','importe','notas','fecha_de_creacion','fecha_de_actualizacion'],
         "gastos_recurrentes":['id','id_visualizacion','id_cuenta','id_categoria_de_gasto','gasto_compartido','importe','fecha_de_creacion','fecha_de_actualizacion'],
         "ingresos_recurrentes":['id','id_visualizacion','id_cuenta','id_categoria_de_ingreso','importe','fecha_de_creacion','fecha_de_actualizacion'],
@@ -80,7 +83,7 @@ def get_estatus_options():
     return estatus_options
 
 def get_breadcrumbs(table_name):
-    if table_name in ('cuentas','categorias_de_gastos','categorias_de_ingresos'):
+    if table_name in ('cuentas','categorias_de_gastos','categorias_de_ingresos','negocios_apple_pay'):
         active_menu='catalogos'
         modulo="Catálogos"
     elif table_name in ('gastos','gastos_recurrentes'):
@@ -106,7 +109,8 @@ def get_breadcrumbs(table_name):
 def get_columnas_ignorar_formulario(table_name):
     columnas_generales = {'fecha_de_creacion', 'estatus', 'id_usuario', 'id_visualizacion', 'fecha_de_actualizacion','contrasena'}
     columns = {
-        "gastos": {'categoria_apple_pay'} | columnas_generales,
+        "gastos": {'id_negocio_apple_pay'} | columnas_generales,
+        "negocios_apple_pay": {'nombre'} | columnas_generales,
     }
     columns=columns.get(table_name)
     if columns==None:
@@ -116,7 +120,6 @@ def get_columnas_ignorar_formulario(table_name):
 def get_columnas_no_obligatorias_formulario(table_name):
     columnas_generales = {'descripcion','notas'}
     columns = {
-        "gastos": {'negocio'} | columnas_generales,
         "cuentas": {'dia_de_corte','dia_de_pago','monto_credito'} | columnas_generales,
     }
     columns=columns.get(table_name)

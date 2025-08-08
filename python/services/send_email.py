@@ -73,3 +73,19 @@ def new_user_email(recipient_email,contrasena):
         )
     except Exception as e:
         raise Exception(f"Error al enviar correos: {e}")
+    
+def apple_pay_email(recipient_email,error_mensaje,error_codigo):
+    try:
+        # Enviar correo al cliente
+        send_html_email(
+            subject="Monitor Financiero - Error Apple Pay",
+            recipient_email=recipient_email,
+            template="partials/email_template.html",
+            body_content="Hubo un error en la conexión con Apple Pay. Favor de revisar",
+            details_list=[
+                f"Error mensaje: {error_mensaje}",
+                f"Error código: {error_codigo}"
+            ]
+        )
+    except Exception as e:
+        raise Exception(f"Error al enviar correos: {e}")
