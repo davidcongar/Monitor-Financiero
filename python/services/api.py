@@ -94,7 +94,7 @@ def apple_pay():
         fecha=json_data.get('fecha')
         negocio=json_data.get('negocio')
         id_cuenta=json_data.get('id_cuenta')
-        id_categoria_de_gasto=data.get('id_categoria_de_gasto')
+        id_categoria_de_gasto=json_data.get('id_categoria_de_gasto')
         new_record = Gastos(id_usuario=id_usuario,id_cuenta=id_cuenta,id_categoria_de_gasto=id_categoria_de_gasto,categoria_apple_pay=negocio,gasto_compartido='No',pagos_mensuales=1,importe=importe,fecha=fecha,negocio=negocio)
         db.session.add(new_record)
         db.session.commit() 
