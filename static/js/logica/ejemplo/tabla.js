@@ -4,32 +4,6 @@
         dateFormat: "Y-m-d"
     });
 
-    window.cambiarEstatus = function(accion, id, callback = null) {
-        const url = `/noticias/cambio_estatus/${accion}/${id}`;
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Content-Type': 'application/json'
-            },
-        })
-        .then(response => {
-            if (!response.ok) throw new Error('Error al cambiar estatus');
-            return response.json();
-        })
-        .then(data => {
-            message=data.message;
-            if (message !== "") {
-                window.dispatchEvent(new CustomEvent('show-success', { detail: message}));
-                window.dispatchEvent(new Event("refresh-data-table"));
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('No se pudo cambiar el estatus.');
-        });
-    }
 function modernMultiSelect() {
     return {
         open: false,

@@ -94,7 +94,7 @@
                                         Selecciona una opción
                                     </option>
                                     {% for option in foreign_options[column] %}
-                                        {% if column in ('estatus', 'estatus_ultima_ejecucion','gasto_compartido') %}
+                                        {% if column in ('estatus', 'tipo','gasto_compartido') %}
                                             <option value="{{ option }}" {% if record and record[column] == option %}selected{% endif %}>
                                                 {{ option }}
                                             </option>

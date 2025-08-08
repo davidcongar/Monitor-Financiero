@@ -273,6 +273,6 @@
 <script src="/static/js/charts/general.js"></script>
 <script src="/static/js/charts/waterfall.js"></script>
 <script>
-        generar_grafica("#balance_mensual", "line",'anio_mes','balance','currency','/queries/balance_mensual')
+        generar_grafica("#balance_mensual", "line",'anio_mes','balance','/queries/balance_mensual',options={height:400,valueType: 'currency'})
 </script>
 {% endblock content %}

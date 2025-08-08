@@ -66,7 +66,7 @@ def new_user_email(recipient_email,contrasena):
             template="partials/email_template.html",
             body_content="Se acaba de crear tu usuario para el Monitor Financiero.",
             details_list=[
-                "URL Plataforma: noticia.us-east-2.elasticbeanstalk.com",
+                "URL Plataforma: monitorfin.us-east-2.elasticbeanstalk.com",
                 f"Correo electrónico: {recipient_email}",
                 f"Contraseña: {contrasena}"
             ]

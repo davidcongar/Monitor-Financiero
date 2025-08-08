@@ -33,3 +33,47 @@ def data_sql(nombre_sql):
     data=db.session.execute(text(base_query),variables_request).fetchall()
     data = [dict(row._mapping) for row in data]
     return jsonify(data)
+
+@queries_bp.route('/manual/gasto_mensual', methods=['GET'])
+@login_required
+def expenses_by_month():
+    anio = request.args.get("anio")
+    categoria=request.args.get("categoria")
+    params = {}
+    params['id_usuario'] = session['id_usuario']
+    base_query=open('./static/sql/gastos/gasto_mensual.sql','r',encoding='utf-8').read()
+    if anio!='historico':
+        base_query += " and extract(year from fecha)=:anio"
+        params['anio'] = anio
+    if categoria!='todas':
+        base_query += " and id_categoria_de_gasto=:categoria"
+        params['categoria'] = categoria
+    base_query += """
+    GROUP BY EXTRACT(month FROM fecha), EXTRACT(YEAR FROM fecha)
+    ORDER BY EXTRACT(YEAR FROM fecha), EXTRACT(month FROM fecha)
+    """
+    data=db.session.execute(text(base_query),params).fetchall()
+    data = [dict(row._mapping) for row in data]
+    return jsonify(data)
+
+@queries_bp.route('/manual/ingreso_mensual', methods=['POST','GET'])
+@login_required
+def ingreso_mensual():
+    anio = request.args.get("anio")
+    categoria=request.args.get("categoria")
+    params = {}
+    params['id_usuario'] = session['id_usuario']
+    base_query=open('./static/sql/ingresos/ingreso_mensual.sql','r',encoding='utf-8').read()
+    if anio!='historico':
+        base_query += " and extract(year from fecha)=:anio"
+        params['anio'] = anio
+    if categoria!='todas':
+        base_query += " and id_categoria_de_ingreso=:categoria"
+        params['categoria'] = categoria
+    base_query += """
+    GROUP BY EXTRACT(month FROM fecha), EXTRACT(YEAR FROM fecha)
+    ORDER BY EXTRACT(YEAR FROM fecha), EXTRACT(month FROM fecha)
+    """
+    data=db.session.execute(text(base_query),params).fetchall()
+    data = [dict(row._mapping) for row in data]
+    return jsonify(data)

@@ -27,7 +27,8 @@ def get_foreign_options():
         "id_cuenta_entrada": Cuentas.query.filter_by(estatus="Activo",id_usuario=session['id_usuario']),
         "id_categoria_de_gasto": CategoriasDeGastos.query.filter_by(estatus="Activo",id_usuario=session['id_usuario']),
         "id_categoria_de_ingreso": CategoriasDeIngresos.query.filter_by(estatus="Activo",id_usuario=session['id_usuario']),
-        "gasto_compartido":{"Si","No"}
+        "gasto_compartido":{"Si","No"},
+        "tipo":{"Débito","Crédito","Inversión","Inversión - Rendimientos"},
     }
     return foreign_options
 
@@ -105,7 +106,7 @@ def get_breadcrumbs(table_name):
 def get_columnas_ignorar_formulario(table_name):
     columnas_generales = {'fecha_de_creacion', 'estatus', 'id_usuario', 'id_visualizacion', 'fecha_de_actualizacion','contrasena'}
     columns = {
-        "noticias": {''} | columnas_generales,
+        "gastos": {'categoria_apple_pay'} | columnas_generales,
     }
     columns=columns.get(table_name)
     if columns==None:
@@ -113,9 +114,10 @@ def get_columnas_ignorar_formulario(table_name):
     return columns
 
 def get_columnas_no_obligatorias_formulario(table_name):
-    columnas_generales = {'descripcion'}
+    columnas_generales = {'descripcion','notas'}
     columns = {
-        "": {''} | columnas_generales
+        "gastos": {'negocio'} | columnas_generales,
+        "cuentas": {'dia_de_corte','dia_de_pago','monto_credito'} | columnas_generales,
     }
     columns=columns.get(table_name)
     if columns==None:

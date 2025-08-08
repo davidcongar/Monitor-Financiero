@@ -84,7 +84,7 @@ function renderizar_grafica(selector, chartType, data_y, data_x, options = {}) {
             ? data_y
             : [{ name: options.seriesName || "", data: data_y }],
         chart: {
-            height: 280,
+            height: options.height || 300,
             type: chartType || "bar",
             events: options.events || {},
             toolbar: {
@@ -189,7 +189,7 @@ function renderizar_pie(selector, data_y, data_x, options = {}) {
     const simpleOptions = {
         series: numericData_y,  // The series holds the values for the pie chart
         chart: {
-            height: 280,
+            height: options.height || 300,
             type: "pie",  // Pie chart
             toolbar: { show: false },  // Disable toolbar
         },
