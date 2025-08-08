@@ -3,8 +3,5 @@ __pycache__/
 *.DS_Store
 flask_session/
 venv/
-migrations/
-migrations_local/
-migrations_prod/
 .env
 .flaskenv
