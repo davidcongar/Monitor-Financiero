@@ -8,34 +8,13 @@ from python.services.authentication import *
 
 import io
 from PIL import Image, ImageDraw, ImageFont
-import re
-import json
-from datetime import date, datetime
-from decimal import Decimal
-
+from python.services.funciones_auxiliares import *
 
 reportes_bp = Blueprint("reportes", __name__, url_prefix="/reportes")
 
 SQL_QUERIES = {
     "movimientos_cuentas": "./static/sql/cuentas/movimientos.sql"
 }
-
-PARAM_REGEX = re.compile(r":([a-zA-Z_][a-zA-Z0-9_]*)")
-
-def extract_param_names(sql: str) -> set[str]:
-    # Find :param placeholders in the SQL
-    return set(PARAM_REGEX.findall(sql))
-
-def to_jsonable(v):
-    if isinstance(v, (datetime, date)):
-        return v.isoformat()
-    if isinstance(v, Decimal):
-        return float(v)  # or str(v) if you prefer exact representation
-    return v
-
-def rowmapping_to_dict(rm):
-    # rm is a RowMapping
-    return {k: to_jsonable(v) for k, v in rm.items()}
 
 @reportes_bp.route("/<string:nombre_sql>", methods=["GET"])
 @login_required

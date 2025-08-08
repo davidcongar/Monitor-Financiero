@@ -86,6 +86,7 @@ from python.routes.system.generar_archivos import generar_archivos_bp
 from python.routes.system.home import home_bp
 from python.services.authentication import auth_bp
 from python.services.api import api_bp
+from python.routes.queries import queries_bp
 
 app.register_blueprint(errors_bp)
 app.register_blueprint(auth_bp)
@@ -93,6 +94,7 @@ app.register_blueprint(home_bp)
 app.register_blueprint(generar_archivos_bp)
 app.register_blueprint(dynamic_bp)
 app.register_blueprint(api_bp)
+app.register_blueprint(queries_bp)
 
 from python.routes.tableros import tableros_bp
 from python.routes.reportes import reportes_bp

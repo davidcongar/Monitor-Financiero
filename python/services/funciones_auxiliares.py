@@ -5,6 +5,11 @@ from sqlalchemy.sql import case
 from flask import session,flash
 from datetime import datetime
 from sqlalchemy import String, Text, Integer, Float, Numeric, or_
+import re
+import re
+import json
+from datetime import date, datetime
+from decimal import Decimal
 
 #####
 # funciones auxiliares
@@ -127,3 +132,21 @@ def get_id_visualizacion(table_name):
     else:
         max_id = modelo.query.with_entities(func.max(modelo.id_visualizacion)).scalar()
     return (max_id or 0) + 1
+
+# queries con variables dinamicas
+PARAM_REGEX = re.compile(r":([a-zA-Z_][a-zA-Z0-9_]*)")
+
+def extract_param_names(sql: str) -> set[str]:
+    # Find :param placeholders in the SQL
+    return set(PARAM_REGEX.findall(sql))
+
+def to_jsonable(v):
+    if isinstance(v, (datetime, date)):
+        return v.isoformat()
+    if isinstance(v, Decimal):
+        return float(v)  # or str(v) if you prefer exact representation
+    return v
+
+def rowmapping_to_dict(rm):
+    # rm is a RowMapping
+    return {k: to_jsonable(v) for k, v in rm.items()}

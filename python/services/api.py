@@ -12,9 +12,9 @@ from python.services.funciones_rutas_dinamicas import *
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 
 def api_login(json_data):
-    correo_electronico = json_data['correo_electronico']
+    id_usuario = json_data['id_usuario']
     contrasena = json_data['contrasena']
-    user = Usuarios.query.filter(Usuarios.correo_electronico==correo_electronico).first()
+    user = Usuarios.query.filter(Usuarios.id==id_usuario).first()
     if user!=None:
         if check_password_hash(user.contrasena, contrasena):
             data={'message':'Credenciales validas'}
@@ -93,7 +93,9 @@ def apple_pay():
         importe=json_data.get('importe')
         fecha=json_data.get('fecha')
         negocio=json_data.get('negocio')
-        new_record = Gastos(id_usuario=id_usuario,categoria_apple_pay=negocio,gasto_compartido='No',pagos_mensuales=1,importe=importe,fecha=fecha,negocio=negocio)
+        id_cuenta=json_data.get('id_cuenta')
+        id_categoria_de_gasto=data.get('id_categoria_de_gasto')
+        new_record = Gastos(id_usuario=id_usuario,id_cuenta=id_cuenta,id_categoria_de_gasto=id_categoria_de_gasto,categoria_apple_pay=negocio,gasto_compartido='No',pagos_mensuales=1,importe=importe,fecha=fecha,negocio=negocio)
         db.session.add(new_record)
         db.session.commit() 
         return jsonify({

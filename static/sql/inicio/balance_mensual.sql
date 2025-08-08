@@ -28,6 +28,6 @@ join_table as(
   order by year, month
 )
 select
-  concat(month,'/',RIGHT(year,2)) as year_month,
+  concat(month,'/',RIGHT(year,2)) as anio_mes,
   sum(net) OVER (ORDER BY year,month) AS balance
 from join_table

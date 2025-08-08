@@ -241,37 +241,17 @@
                         <table class="min-w-[640px] w-full product-table table-striped" id="balance">
                             <thead>
                                 <tr class="text-left">
-                                    <th onclick="sortTable('balance',0)">
-                                        Cuenta
-                                        <svg width="10" height="6" class="inline-block" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M9.70711 1.70711C10.0976 1.31658 10.0976 0.683418 9.70711 0.292894C9.31658 -0.0976307 8.68342 -0.0976308 8.29289 0.292894L5 3.58579L1.70711 0.292893C1.31658 -0.097631 0.683417 -0.0976311 0.292893 0.292893C-0.0976309 0.683417 -0.097631 1.31658 0.292893 1.70711L4.29289 5.70711C4.68342 6.09763 5.31658 6.09763 5.70711 5.70711L9.70711 1.70711Z" fill="currentColor"></path>
-                                        </svg>
-                                    </th>
-                                    <th onclick="sortTable('balance',1)">
-                                        Tipo
-                                        <svg width="10" height="6" class="inline-block" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M9.70711 1.70711C10.0976 1.31658 10.0976 0.683418 9.70711 0.292894C9.31658 -0.0976307 8.68342 -0.0976308 8.29289 0.292894L5 3.58579L1.70711 0.292893C1.31658 -0.097631 0.683417 -0.0976311 0.292893 0.292893C-0.0976309 0.683417 -0.097631 1.31658 0.292893 1.70711L4.29289 5.70711C4.68342 6.09763 5.31658 6.09763 5.70711 5.70711L9.70711 1.70711Z" fill="currentColor"></path>
-                                        </svg>
-                                    </th>
-                                    <th onclick="sortTable('balance',3)">
-                                        Balance
-                                        <svg width="10" height="6" class="inline-block" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M9.70711 1.70711C10.0976 1.31658 10.0976 0.683418 9.70711 0.292894C9.31658 -0.0976307 8.68342 -0.0976308 8.29289 0.292894L5 3.58579L1.70711 0.292893C1.31658 -0.097631 0.683417 -0.0976311 0.292893 0.292893C-0.0976309 0.683417 -0.097631 1.31658 0.292893 1.70711L4.29289 5.70711C4.68342 6.09763 5.31658 6.09763 5.70711 5.70711L9.70711 1.70711Z" fill="currentColor"></path>
-                                        </svg>
-                                    </th>
-                                    <th onclick="sortTable('balance',4)">
-                                        Crédito disponible
-                                        <svg width="10" height="6" class="inline-block" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M9.70711 1.70711C10.0976 1.31658 10.0976 0.683418 9.70711 0.292894C9.31658 -0.0976307 8.68342 -0.0976308 8.29289 0.292894L5 3.58579L1.70711 0.292893C1.31658 -0.097631 0.683417 -0.0976311 0.292893 0.292893C-0.0976309 0.683417 -0.097631 1.31658 0.292893 1.70711L4.29289 5.70711C4.68342 6.09763 5.31658 6.09763 5.70711 5.70711L9.70711 1.70711Z" fill="currentColor"></path>
-                                        </svg>
-                                    </th>
+                                    <th>Cuenta</th>
+                                    <th>Tipo</th>
+                                    <th>Balance</th>
+                                    <th>Crédito disponible</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for record in accounts_balance %}
                                 <tr>
-                                    <td>{{ record.name }}</td>
-                                    <td>{{ record.type }}</td>
+                                    <td>{{ record.nombre }}</td>
+                                    <td>{{ record.tipo }}</td>
                                     <td>${{ record.balance | commafy}}</td>
                                     <td>${{ record.available_credit | commafy}}</td>
                                 </tr>
@@ -283,8 +263,16 @@
             </div>
             <div class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg">
                 <h2 class="mb-[30px] font-semibold">Balance neto (Mensual)</h2>
-                <div id="balance_chart"></div>
+                <div id="balance_mensual"></div>
             </div>
         </div>
     </div>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script>
+<script src="/static/js/apex-ecom_copy.js"></script>
+<script src="/static/js/funciones_generales.js"></script>
+<script src="/static/js/charts/general.js"></script>
+<script src="/static/js/charts/waterfall.js"></script>
+<script>
+        generar_grafica("#balance_mensual", "line",'anio_mes','balance','currency','/queries/balance_mensual')
+</script>
 {% endblock content %}

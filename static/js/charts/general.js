@@ -1,6 +1,6 @@
 
 // funcion para hacer graficas con mas de una categoria
-function generar_grafica_categorias(nombre_grafica, tipo_grafica,x_key,y_key,z_key,valor_tipo, path) {
+function generar_grafica_categorias(nombre_grafica, tipo_grafica,x_key,y_key,z_key, path,options) {
     fetch(path)
         .then(response => {
             if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
@@ -21,13 +21,13 @@ function generar_grafica_categorias(nombre_grafica, tipo_grafica,x_key,y_key,z_k
                     })
                 };
             });
-            renderizar_grafica(nombre_grafica, tipo_grafica, series, xValues, {valueType: valor_tipo }); // or "currency", or "normal"
+            renderizar_grafica(nombre_grafica, tipo_grafica, series, xValues, options);
         })
         .catch(error => {
             console.error("Error fetching or processing data:", error);
         });
 }
-function generar_grafica(nombre_grafica, tipo_grafica,dataXKey, dataYKey,valor_tipo,path) {
+function generar_grafica(nombre_grafica, tipo_grafica,dataXKey, dataYKey,path,options) {
     fetch(path)
         .then(response => {
             if (!response.ok) {
@@ -49,7 +49,7 @@ function generar_grafica(nombre_grafica, tipo_grafica,dataXKey, dataYKey,valor_t
                 y.push(1 - y[0]);  // Converts the result to a string before pushing
                 renderizar_avance(nombre_grafica, "bar", y, x, {valueType: valor_tipo});
             }else{
-                renderizar_grafica(nombre_grafica, tipo_grafica, y, x, {valueType: valor_tipo});
+                renderizar_grafica(nombre_grafica, tipo_grafica, y, x,options);
             }
         })
         .catch(error => {
@@ -78,7 +78,6 @@ function renderizar_grafica(selector, chartType, data_y, data_x, options = {}) {
                 return value.toLocaleString();
         }
     };
-
     const defaultOptions = {
         series: 
             Array.isArray(data_y) && data_y.length && typeof data_y[0] === "object" && "data" in data_y[0]
@@ -98,11 +97,11 @@ function renderizar_grafica(selector, chartType, data_y, data_x, options = {}) {
             curve: 'smooth',
         },
         colors: options.colors || [
-            "#C41f68", "#029488", "#AE1F2D", "#00D085", "#FFC41F", "#FF3232"
+            "#267DFF","#7B6AFE","#FF51A4","#FF7C51","#00D085","#FFC41F","#FF3232",
         ],
         plotOptions: {
             bar: {
-                columnWidth: "10%",
+                columnWidth: "60%",
                 distributed: true,
                 borderRadius: 5,
                 ...options.plotOptions?.bar,
@@ -167,6 +166,7 @@ function renderizar_grafica(selector, chartType, data_y, data_x, options = {}) {
     const mergedOptions = { ...defaultOptions, ...options };
 
     const chartKey = selector.replace(/[^a-zA-Z0-9]/g, "");
+    if (window[chartKey]) { window[chartKey].destroy() }
     window[chartKey] = new ApexCharts(document.querySelector(selector), mergedOptions);
     window[chartKey].render();
 }
@@ -195,7 +195,7 @@ function renderizar_pie(selector, data_y, data_x, options = {}) {
         },
         labels: data_x,  // Labels for pie chart slices
         colors: options.colors || [
-            "#C41f68", "#029488", "#AE1F2D", "#00D085", "#FFC41F", "#FF3232"
+            "#267DFF","#7B6AFE","#FF51A4","#FF7C51","#00D085","#FFC41F","#FF3232",
         ],
         dataLabels: {
             enabled: true,  // Enable data labels for pie charts

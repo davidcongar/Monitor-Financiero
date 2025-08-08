@@ -100,43 +100,43 @@
                 <div class="mb-[30px] flex items-center flex-wrap">
                     <h2 class="flex-1 font-semibold">Ingreso mensual por categoría</h2>
                     <div>
-                        <select id="select_month_chart1" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="change_chart1(`/api/income_by_category?month=${select_month_chart1.value}&year=${select_year_chart1.value}`)">
-                            <option value="0">Enero</option>
-                            <option value="1">Febrero</option>
-                            <option value="2">Marzo</option>
-                            <option value="3">Abril</option>
-                            <option value="4">Mayo</option>
-                            <option value="5">Junio</option>
-                            <option value="6">Julio</option>
-                            <option value="7">Agosto</option>
-                            <option value="8">Septiembre</option>
-                            <option value="9">Octubre</option>
-                            <option value="10">Noviembre</option>
-                            <option value="11">Diciembre</option>
+                        <select id="select_ingreso_mensual_categoria_mes" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="generar_grafica('#ingreso_mensual_categoria','bar','categoria','importe',`/queries/ingreso_mensual_categoria?anio=${select_ingreso_mensual_categoria_anio.value}&mes=${select_ingreso_mensual_categoria_mes.value}`,{legend:{show:false},valueType: 'currency'})">
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
                         </select>
                     </div>
                     <div style="margin-left:10px">
-                        <select id="select_year_chart1" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="change_chart1(`/api/income_by_category?month=${select_month_chart1.value}&year=${select_year_chart1.value}`)">
+                        <select id="select_ingreso_mensual_categoria_anio" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="generar_grafica('#ingreso_mensual_categoria','bar','categoria','importe',`/queries/ingreso_mensual_categoria?anio=${select_ingreso_mensual_categoria_anio.value}&mes=${select_ingreso_mensual_categoria_mes.value}`,{legend:{show:false},valueType: 'currency'})">
                             {% for record in anios %}
                                 <option value="{{ record.year }}">{{ record.year }}</option>
                             {% endfor %}
                         </select>
                     </div>
                 </div>
-                <div id="chart1"></div>
+                <div id="ingreso_mensual_categoria"></div>
             </div>
             <div class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg space-y-6">
                 <div class="mb-[30px] flex items-center flex-wrap">
                     <h2 class="flex-1 font-semibold">Ingreso anual por categoría</h2>
                     <div style="margin-left:10px">
-                        <select id="select_year_chart2" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="change_chart2(`/api/income_by_category_year?year=${select_year_chart2.value}`)">
+                        <select id="select_ingreso_anual_categoria_anio" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="generar_grafica('#ingreso_anual_categoria','bar','categoria','importe',`/queries/ingreso_anual_categoria?anio=${select_ingreso_anual_categoria_anio.value}`,{legend:{show:false},valueType: 'currency'})">
                             {% for record in anios %}
                                 <option value="{{ record.year }}">{{ record.year }}</option>
                             {% endfor %}
                         </select>
                     </div>
                 </div>
-                <div id="chart2"></div>
+                <div id="ingreso_anual_categoria"></div>
             </div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-1 gap-5">
@@ -144,7 +144,7 @@
                 <div class="mb-[30px] flex items-center flex-wrap">
                     <h2 class="flex-1 font-semibold">Ingreso mensual</h2>
                     <div>
-                        <select id="select_category_chart3" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="change_chart3(`/api/income_by_month?year=${select_year_chart3.value}&category=${select_category_chart3.value}`)">
+                        <select id="select_ingreso_mensual_categoria" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="change_chart3(`/api/income_by_month?year=${select_year_chart3.value}&category=${select_category_chart3.value}`)">
                             <option value="all">Todas</option>
                             {% for record in income_categories %}
                                 <option value="{{ record.id }}">{{ record.name }}</option>
@@ -152,7 +152,7 @@
                         </select>
                     </div>
                     <div style="margin-left:10px">
-                        <select id="select_year_chart3" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="change_chart3(`/api/income_by_month?year=${select_year_chart3.value}&category=${select_category_chart3.value}`)">
+                        <select id="select_ingreso_mensual_anio" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="change_chart3(`/api/income_by_month?year=${select_year_chart3.value}&category=${select_category_chart3.value}`)">
                             <option value="all">Histórico</option>
                             {% for record in anios %}
                                 <option value="{{ record.year }}">{{ record.year }}</option>
@@ -160,10 +160,24 @@
                         </select>
                     </div>
                 </div>
-                <div id="chart3"></div>
+                <div id="ingreso_mensual"></div>
             </div>
         </div>
     </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script>
+<script src="/static/js/apex-ecom_copy.js"></script>
+<script src="/static/js/funciones_generales.js"></script>
+<script src="/static/js/charts/general.js"></script>
+<script src="/static/js/charts/waterfall.js"></script>
+<script>
+        const mes_actual = new Date().getMonth()+1; 
+        const anio_actual = new Date().getFullYear();
+        select_ingreso_mensual_categoria_mes.value = mes_actual;
+        select_ingreso_mensual_categoria_anio.value = anio_actual;
+        select_ingreso_anual_categoria_anio.value=anio_actual
+        generar_grafica('#ingreso_mensual_categoria', 'bar','categoria','importe','/queries/ingreso_mensual_categoria?anio='+anio_actual+'&mes='+mes_actual,options={legend:{show:false},valueType: 'currency'})
+        generar_grafica('#ingreso_anual_categoria', 'bar','categoria','importe','/queries/ingreso_anual_categoria?anio='+anio_actual,options={legend:{show:false},valueType: 'currency'})
+        generar_grafica('#ingreso_mensual', 'line','categoria','importe','/queries/ingreso_mensual?anio='+anio_actual+'categoria',options={legend:{show:false},valueType: 'currency'})
+</script>
 {% endblock content %}
