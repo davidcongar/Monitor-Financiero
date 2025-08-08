@@ -65,11 +65,11 @@ def get_orden_columnas_modal():
         "cuentas":['id','id_visualizacion','nombre','tipo','monto_credito','estatus','fecha_de_creacion','fecha_de_actualizacion'],
         "categorias_de_gastos":['id','id_visualizacion','nombre','estatus','fecha_de_creacion','fecha_de_actualizacion'],
         "categorias_de_ingresos":['id','id_visualizacion','nombre','estatus','fecha_de_creacion','fecha_de_actualizacion'],
-        "gastos":['id','id_visualizacion','id_cuenta','id_categoria_de_gasto','categoria_apple_pay','negocio','gasto_compartido','pagos_mensuales','fecha','importe','fecha_de_creacion','fecha_de_actualizacion'],
-        "ingresos":['id','id_visualizacion','id_cuenta','id_categoria_de_ingreso','fecha','importe','fecha_de_creacion','fecha_de_actualizacion'],
+        "gastos":['id','id_visualizacion','id_cuenta','id_categoria_de_gasto','categoria_apple_pay','negocio','gasto_compartido','pagos_mensuales','fecha','importe','notas','fecha_de_creacion','fecha_de_actualizacion'],
+        "ingresos":['id','id_visualizacion','id_cuenta','id_categoria_de_ingreso','fecha','importe','notas','fecha_de_creacion','fecha_de_actualizacion'],
         "gastos_recurrentes":['id','id_visualizacion','id_cuenta','id_categoria_de_gasto','gasto_compartido','importe','fecha_de_creacion','fecha_de_actualizacion'],
         "ingresos_recurrentes":['id','id_visualizacion','id_cuenta','id_categoria_de_ingreso','importe','fecha_de_creacion','fecha_de_actualizacion'],
-        "transferencias":['id','id_visualizacion','id_cuenta_salida','id_cuenta_entrada','fecha','importe','fecha_de_creacion','fecha_de_actualizacion']
+        "transferencias":['id','id_visualizacion','id_cuenta_salida','id_cuenta_entrada','fecha','importe','notas','fecha_de_creacion','fecha_de_actualizacion']
     }
     return columns
 

@@ -94,9 +94,10 @@ def apple_pay():
         fecha=json_data.get('fecha')
         negocio=json_data.get('negocio')
         id_cuenta=json_data.get('id_cuenta')
+        notas=json_data.get('notas')
         id_categoria_de_gasto=json_data.get('id_categoria_de_gasto')
         id_visualizacion=Gastos.query.filter_by(id_usuario=id_usuario).with_entities(func.max(Gastos.id_visualizacion)).scalar()+1
-        new_record = Gastos(id_usuario=id_usuario,id_visualizacion=id_visualizacion,id_cuenta=id_cuenta,id_categoria_de_gasto=id_categoria_de_gasto,categoria_apple_pay=negocio,gasto_compartido='No',pagos_mensuales=1,importe=importe,fecha=fecha,negocio=negocio)
+        new_record = Gastos(id_usuario=id_usuario,id_visualizacion=id_visualizacion,id_cuenta=id_cuenta,id_categoria_de_gasto=id_categoria_de_gasto,categoria_apple_pay=negocio,gasto_compartido='No',pagos_mensuales=1,importe=importe,fecha=fecha,negocio=negocio,notas=notas)
         db.session.add(new_record)
         db.session.commit() 
         return jsonify({
