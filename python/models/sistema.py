@@ -41,7 +41,7 @@ class LogsAuditoria(db.Model):
     id = db.Column(db.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     tabla = db.Column(db.String(255), nullable=False)
     id_registro = db.Column(db.String(255), nullable=False)
-    usuario = db.Column(db.String(255), nullable=False)
+    usuario = db.Column(db.String(255), nullable=False, server_default="Desconocido")
     accion = db.Column(db.String(1000), nullable=False)
     datos_anteriores = db.Column(db.Text, nullable=True)
     datos_nuevos = db.Column(db.Text, nullable=True)

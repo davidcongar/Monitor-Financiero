@@ -50,7 +50,7 @@ def get_columnas_tabla():
         "cuentas":['id_visualizacion','nombre','tipo','monto_credito','estatus'],
         "categorias_de_gastos":['id_visualizacion','nombre','estatus'],
         "categorias_de_ingresos":['id_visualizacion','nombre','estatus'],
-        "gastos":['id_visualizacion','id_cuenta','id_categoria_de_gasto','categoria_apple_pay','negocio','gasto_compartido','pagos_mensuales','fecha','importe'],
+        "gastos":['id_visualizacion','id_cuenta','id_categoria_de_gasto','gasto_compartido','pagos_mensuales','fecha','importe'],
         "ingresos":['id_visualizacion','id_cuenta','id_categoria_de_ingreso','fecha','importe'],
         "gastos_recurrentes":['id_visualizacion','id_cuenta','id_categoria_de_gasto','gasto_compartido','importe'],
         "ingresos_recurrentes":['id_visualizacion','id_cuenta','id_categoria_de_ingreso','importe'],
