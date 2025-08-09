@@ -8,17 +8,17 @@ cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
 sed -i '/http {/r /dev/stdin' /etc/nginx/nginx.conf <<'EOF'
     server {
         listen 80;
-        server_name monitorfin.us-east-2.elasticbeanstalk.com;
+        server_name monitorfinanciero.snappsolutions.com;
 
         return 301 https://$host$request_uri;
     }
 
     server {
         listen 443 ssl;
-        server_name monitorfin.us-east-2.elasticbeanstalk.com;
+        server_name monitorfinanciero.snappsolutions.com;
 
-        ssl_certificate /etc/letsencrypt/live/monitorfin.us-east-2.elasticbeanstalk.com/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/monitorfin.us-east-2.elasticbeanstalk.com/privkey.pem;
+        ssl_certificate /etc/letsencrypt/live/monitorfinanciero.snappsolutions.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/monitorfinanciero.snappsolutions.com/privkey.pem;
 
         location / {
             proxy_pass http://127.0.0.1:8000;

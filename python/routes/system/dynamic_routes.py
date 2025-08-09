@@ -8,6 +8,7 @@ from python.models import db
 from python.models.modelos import *
 from python.services.helper_functions import *
 from python.services.form_workflows.edit_on_success import *
+from python.services.form_workflows.on_success import *
 from python.services.authentication import *
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.orm.dynamic import AppenderQuery
@@ -189,6 +190,7 @@ def add(table_name):
             new_record.contrasena=generate_password_hash(contrasena)
             new_user_email(new_record.correo_electronico,contrasena)
         db.session.add(new_record)
+        db.session.flush()
         # Process many-to-many relationships
         for key, value in relationship_data.items():
             related_model = getattr(model, key).property.mapper.class_
@@ -198,6 +200,7 @@ def add(table_name):
             getattr(new_record, key).extend(selected_items)
         # Commit transaction
         db.session.commit()
+        on_success(table_name,new_record.id)
         flash(f"Registro creado exitosamente en '{table_name.replace('_', ' ').capitalize()}'.", "success")
     except Exception as e:
         db.session.rollback()

@@ -14,7 +14,7 @@ from decimal import Decimal
 
 HANDLERS = {}
 
-def on_success(*tables):
+def handler_edit_on_success(*tables):
     def wrapper(fn):
         for t in tables:
             HANDLERS[t] = fn
@@ -27,7 +27,7 @@ def edit_on_success(table_name, id):
         return
     return handler(id)
 
-@on_success('negocios_apple_pay')
+@handler_edit_on_success('negocios_apple_pay')
 def eos_negocios_apple_pay(id):
     record = db.session.get(NegociosApplePay, id)
     if not record or record.id_categoria_de_gasto is None:

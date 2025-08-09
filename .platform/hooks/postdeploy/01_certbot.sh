@@ -5,8 +5,8 @@ set -e
 # Install Certbot and NGINX plugin
 sudo dnf install -y certbot python3-certbot-nginx awscli
 
-DOMAIN="monitorfin.us-east-2.elasticbeanstalk.com"
-S3_BUCKET="meragroup"
+DOMAIN="monitorfinanciero.snappsolutions.com"
+S3_BUCKET="snappsolutions"
 CERT_PATH="/etc/letsencrypt/live/$DOMAIN/fullchain.pem"
 
 # Try to download existing certs from S3
