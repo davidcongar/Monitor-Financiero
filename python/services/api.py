@@ -7,7 +7,7 @@ from python.services.authentication import *
 
 import io
 from PIL import Image, ImageDraw, ImageFont
-from python.services.funciones_rutas_dinamicas import *
+from python.services.dynamic_routes_functions import *
 import traceback
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
@@ -74,7 +74,6 @@ def dynamic_data(table_name):
     json_data = request.json
     auth=api_login(json_data)
     if auth['message']=='Credenciales validas':
-
         model = get_model_by_name(table_name)
         if not model:
             data={'message':'La tabla no existe.'}
@@ -153,7 +152,3 @@ def apple_pay():
     else:
         data={'message':'Usuario no existe'}
         return data       
-
-
-def default_to_dict(obj):
-    return {col.name: getattr(obj, col.name) for col in obj.__table__.columns}

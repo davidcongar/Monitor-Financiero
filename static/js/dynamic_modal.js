@@ -2,7 +2,7 @@ document.addEventListener('alpine:init', () => {
     Alpine.store('modalData', { record: {} });
 });
 function redirectActions(url) {
-        if (url.includes("eliminar")) {
+        if (url.includes("delete")) {
             // Para eliminación se confirma y se envía por POST
             if (confirm('¿Quieres eliminar el registro seleccionado?')) {
                 const form = document.getElementById('action_buttons');
@@ -10,7 +10,7 @@ function redirectActions(url) {
                 form.method = "POST";
                 form.submit();
             }
-        } else if (url.includes("descargar_pdf")) {
+        } else if (url.includes("download_pdf")) {
             // Para descargar PDF se utiliza fetch y se procesa la descarga
             fetch(url, { method: "POST" })
                 .then(response => {
@@ -58,12 +58,12 @@ async function openActions(form, recordId,estatus) {
         document.getElementById('estatus').textContent=estatus;
 
         const updateButton = document.querySelector('button[data-action="actualizar"]');
-        const deleteButton = document.querySelector('button[data-action="eliminar"]');
+        const deleteButton = document.querySelector('button[data-action="delete"]');
         const downloadButton = document.querySelector('button[data-action="descargar"]');
 
-        updateButton.setAttribute('onclick', `redirectActions('/${form}/formulario?id=${recordId}')`);
-        deleteButton.setAttribute('onclick', `redirectActions('/${form}/eliminar?id=${recordId}')`);
-        downloadButton.setAttribute('onclick', `redirectActions('/generar_archivos/descargar_pdf?tabla=${form}&id=${recordId}')`);
+        updateButton.setAttribute('onclick', `redirectActions('/${form}/form?id=${recordId}')`);
+        deleteButton.setAttribute('onclick', `redirectActions('/${form}/delete?id=${recordId}')`);
+        downloadButton.setAttribute('onclick', `redirectActions('/files/download_pdf?tabla=${form}&id=${recordId}')`);
         const data = await get_record(form, recordId);
         const popupActions = document.getElementById('modal');
         console.log("data =", data);
@@ -79,7 +79,7 @@ function closeActions() {
 }
 async function get_record(form, recordId) {
         try {
-            const path = `/${form}/datos/${recordId}`;
+            const path = `/${form}/data/${recordId}`;
             const response = await fetch(path);
             if (!response.ok) {
                 throw new Error(`Network response was not ok: ${response.statusText}`);

@@ -5,7 +5,7 @@ from flask import Blueprint, flash, redirect, render_template, request, session,
 
 from python.models import db
 from python.models.modelos import *
-from python.services.send_email import *
+from python.services.email import *
 from functools import wraps 
 import secrets
 import string
@@ -19,7 +19,7 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-def rutas_accesibles_por_usuario(id_usuario, id_rol):
+def routes_accessible_by_user(id_user, id_role):
     """
     Preload all routes the user and their role have access to.
     """
@@ -30,36 +30,36 @@ def rutas_accesibles_por_usuario(id_usuario, id_rol):
     LEFT JOIN relacion_rutas_roles ro ON r.id = ro.id_ruta AND ro.id_rol = :id_rol
     WHERE u.id_usuario IS NOT NULL OR ro.id_rol IS NOT NULL
     """
-    result = db.session.execute(text(query), {'id_usuario': id_usuario, 'id_rol': id_rol}).fetchall()
-    session['rutas_accesibles'] = {row[0] for row in result} 
+    result = db.session.execute(text(query), {'id_usuario': id_user, 'id_rol': id_role}).fetchall()
+    session['accessible_routes'] = {row[0] for row in result} 
 
-def control_accesos(path):
+def access_control(path):
     """
     Check if the current user has access to the given path using cached routes.
     """
-    id_usuario = session.get('id_usuario')
-    id_rol = session.get('id_rol')
-    rutas_accesibles = session.get('rutas_accesibles')
+    id_user = session.get('id_usuario')
+    id_role = session.get('id_rol')
+    accessible_routes = session.get('accessible_routes')
 
-    if not id_usuario or not id_rol or not rutas_accesibles:
+    if not id_user or not id_role or not accessible_routes:
         return False
 
-    if path in rutas_accesibles:
+    if path in accessible_routes:
         return True
     # Check parent paths
     while path:
         path = path.rsplit('/', 1)[0]  # Remove the last segment
-        if path in rutas_accesibles:
+        if path in accessible_routes:
             return True
     # Check root route
-    return '/' in rutas_accesibles
+    return '/' in accessible_routes
 
 def roles_required():
     def decorator(func):
         @wraps(func)
         def wrapped_function(*args, **kwargs):
             path = request.path
-            if not control_accesos(path):
+            if not access_control(path):
                 flash("No tienes permiso para acceder al módulo/funcionalidad seleccionada.", "danger")
                 return redirect(request.referrer or '/')
             return func(*args, **kwargs)

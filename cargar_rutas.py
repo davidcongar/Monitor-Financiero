@@ -43,7 +43,7 @@ def crear_ruta(nombre_formulario,ruta_principal):
         {'nombre': 'Acceso total '+nombre_formulario, 'ruta': ruta},
         {'nombre': 'Visualizar '+nombre_formulario, 'ruta': ruta+'/'+'visualizar'},
         {'nombre': 'Formulario '+nombre_formulario, 'ruta': ruta+'/'+'formulario'},
-        {'nombre': 'Registrar '+nombre_formulario, 'ruta': ruta+'/'+'registrar'},
+        {'nombre': 'add '+nombre_formulario, 'ruta': ruta+'/'+'add'},
         {'nombre': 'Editar '+nombre_formulario, 'ruta': ruta+'/'+'editar'},
         {'nombre': 'Eliminar '+nombre_formulario, 'ruta': ruta+'/'+'eliminar'}
     ]

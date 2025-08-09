@@ -6,13 +6,13 @@ from flask import Blueprint, flash, jsonify, redirect, render_template, request,
 
 from python.models import db
 from python.models.modelos import *
-from python.services.funciones_auxiliares import *
-from python.services.funciones_tablas import *
+from python.services.helper_functions import *
+from python.services.form_workflows.edit_on_success import *
 from python.services.authentication import *
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.orm.dynamic import AppenderQuery
 from sqlalchemy.orm import aliased
-from python.services.funciones_rutas_dinamicas import *
+from python.services.dynamic_routes_functions import *
 from python.services.boto3_s3 import S3Service
 s3_service = S3Service()
 
@@ -22,7 +22,7 @@ dynamic_bp = Blueprint("dynamic", __name__, url_prefix="/dynamic")
 
 @dynamic_bp.route("/<table_name>")
 @login_required
-def tabla(table_name):
+def table_view(table_name):
     """
     Ruta para listar todos los registros de una tabla de forma dinámica.
     """
@@ -33,7 +33,7 @@ def tabla(table_name):
 
     # Obtener todos los registros de la tabla
     # Obtener las columnas definidas en el modelo
-    columns=get_columnas_tabla().get(table_name)
+    columns=get_table_columns().get(table_name)
     if columns==None:
         columns = model.__table__.columns.keys()
         # Get Many-to-Many relationships
@@ -44,15 +44,17 @@ def tabla(table_name):
         columns = columns + many_to_many_columns
 
     # Datos para resaltar el menú activo en el sidebar
-    modulo,active_menu=get_breadcrumbs(table_name)
+    module,active_menu=get_breadcrumbs(table_name)
 
     context = {
             "activeMenu": active_menu, 
             "activeItem": table_name,
-            "breadcrumbs": [{"name":modulo,"url":""},{"name":table_name.replace('_', ' ').capitalize(),"url":""}]
+            "breadcrumbs": [{"name":module,"url":""},{"name":table_name.replace('_', ' ').capitalize(),"url":""}]
         }
     buttons_modal_exits = os.path.exists(f'templates/partials/table/modals/{table_name}.html')
-    tabs_exist= os.path.exists(f'templates/partials/table/tabs/{table_name}.html')
+    tabs_exist = os.path.exists(f'templates/partials/table/tabs/{table_name}.html')
+    table_buttons = os.path.exists(f'templates/partials/table/buttons/{table_name}.html')
+    number_buttons=get_table_buttons().get(table_name,0)
     if tabs_exist:
         data_tabs=get_data_tabs(table_name)
     else:
@@ -63,20 +65,22 @@ def tabla(table_name):
         tabs_exist=tabs_exist,
         columns=columns,
         table_name=table_name,
+        table_buttons=table_buttons,
         data_tabs=data_tabs,
+        number_buttons=number_buttons,
         **context,
     )
 
-@dynamic_bp.route("/<table_name>/formulario", methods=["GET", "POST"])
+@dynamic_bp.route("/<table_name>/form", methods=["GET", "POST"])
 @login_required
-def formulario(table_name):
+def form(table_name):
     model = get_model_by_name(table_name)
     if not model:
         flash(f"La tabla '{table_name}' no existe.", "danger")
-        return redirect(url_for("dynamic.tabla", table_name=table_name))
-    columnas_ignorar=get_columnas_ignorar_formulario(table_name)
-    columns = [col for col in model.__table__.columns.keys() if col not in columnas_ignorar]
-    columnas_no_obligatorios=get_columnas_no_obligatorias_formulario(table_name)
+        return redirect(url_for("dynamic.table_view", table_name=table_name))
+    ignored_columns=get_ignored_columns(table_name)
+    columns = [col for col in model.__table__.columns.keys() if col not in ignored_columns]
+    columnas_no_obligatorios=get_non_mandatory_columns(table_name)
     required_fields=[col for col in columns if col not in columnas_no_obligatorios]
 
     foreign_options = get_foreign_options()
@@ -115,11 +119,11 @@ def formulario(table_name):
     record_id = request.args.get("id")
     if record_id!=None:
         record = model.query.get(record_id)
-        nombre = getattr(record, "nombre", None)
-        accion = f"Editar registro: {nombre}" if nombre else "Editar registro "+ str(record.id_visualizacion)
+        name = getattr(record, "nombre", None)
+        accion = f"Editar registro: {name}" if name else "Editar registro "+ str(record.id_visualizacion)
         if not record:
             flash(f"Registro con ID {record_id} no encontrado en '{table_name}'.", "danger")
-            return redirect(url_for("dynamic.tabla", table_name=table_name))
+            return redirect(url_for("dynamic.table_view", table_name=table_name))
     else:
         accion="Registrar"
         record=None
@@ -128,7 +132,7 @@ def formulario(table_name):
         "activeMenu": active_menu,
         "activeItem": table_name,
         "foreign_options": foreign_options,
-        "breadcrumbs": [{"name":modulo,"url":""},{"name":table_name.replace('_', ' ').capitalize(),"url":url_for("dynamic.tabla", table_name=table_name)},{"name":accion,"url":""}]
+        "breadcrumbs": [{"name":modulo,"url":""},{"name":table_name.replace('_', ' ').capitalize(),"url":url_for("dynamic.table_view", table_name=table_name)},{"name":accion,"url":""}]
     }
 
     return render_template(
@@ -143,13 +147,13 @@ def formulario(table_name):
         **context,
     )
 
-@dynamic_bp.route("/<table_name>/registrar", methods=["POST"])
+@dynamic_bp.route("/<table_name>/add", methods=["POST"])
 @login_required
-def registrar(table_name):
+def add(table_name):
     model = get_model_by_name(table_name)
     if not model:
         flash(f"La tabla '{table_name}' no existe.", "danger")
-        return redirect(url_for("dynamic.tabla", table_name=table_name))
+        return redirect(url_for("dynamic.table_view", table_name=table_name))
     try:
         # Retrieve all form data (handling multi-select fields correctly)
         data = {key: request.form.getlist(key) for key in request.form.keys()}
@@ -198,11 +202,11 @@ def registrar(table_name):
     except Exception as e:
         db.session.rollback()
         flash(f"Error al crear el registro: {str(e)}", "danger")
-    return redirect(url_for("dynamic.tabla", table_name=table_name))
+    return redirect(url_for("dynamic.table_view", table_name=table_name))
 
-@dynamic_bp.route("/<table_name>/datos", methods=["GET"])
+@dynamic_bp.route("/<table_name>/data", methods=["GET"])
 @login_required
-def datos(table_name):
+def data(table_name):
     model = get_model_by_name(table_name)
     if not model:
         return jsonify({"error": f"La tabla '{table_name}' no existe."}), 404
@@ -216,7 +220,7 @@ def datos(table_name):
     status = request.args.get("status", "", type=str)
     dateRange=request.args.get("dateRange", "", type=str)
 
-    if table_name=='usuarios':
+    if table_name in ('usuarios','logs_auditoria'):
         query = model.query
     else:
         query = model.query.filter_by(id_usuario=session['id_usuario'])
@@ -330,9 +334,9 @@ def datos(table_name):
         }
     )
 
-@dynamic_bp.route("/<table_name>/eliminar", methods=["POST"])
+@dynamic_bp.route("/<table_name>/delete", methods=["POST"])
 @login_required
-def eliminar(table_name):
+def delete(table_name):
     model = get_model_by_name(table_name)
     if not model:
         flash(f"La tabla '{table_name}' no existe.", "danger")
@@ -341,7 +345,7 @@ def eliminar(table_name):
     record_id = request.args.get("id")  # Obtener como cadena
     if record_id is None:
         flash("No se especificó el ID del registro a eliminar.", "danger")
-        return redirect(url_for("dynamic.tabla", table_name=table_name))
+        return redirect(url_for("dynamic.table_view", table_name=table_name))
 
     # Determinar el tipo de la clave primaria
     primary_key_column = list(model.__table__.primary_key.columns)[0]
@@ -350,12 +354,12 @@ def eliminar(table_name):
             record_id = int(record_id)
         except ValueError:
             flash("El ID del registro debe ser numérico.", "danger")
-            return redirect(url_for("dynamic.tabla", table_name=table_name))
+            return redirect(url_for("dynamic.table_view", table_name=table_name))
 
     record = model.query.get(record_id)
     if not record:
         flash(f"Registro con ID {record_id} no encontrado en '{table_name}'.", "danger")
-        return redirect(url_for("dynamic.tabla", table_name=table_name))
+        return redirect(url_for("dynamic.table_view", table_name=table_name))
 
     try:
         db.session.delete(record)
@@ -365,12 +369,12 @@ def eliminar(table_name):
         db.session.rollback()
         flash(f"Error al eliminar el registro: {str(e)}", "danger")
 
-    return redirect(url_for("dynamic.tabla", table_name=table_name))
+    return redirect(url_for("dynamic.table_view", table_name=table_name))
 
-@dynamic_bp.route("/<table_name>/editar", methods=["GET", "POST"])
+@dynamic_bp.route("/<table_name>/edit", methods=["GET", "POST"])
 @login_required
 
-def editar(table_name):
+def edit(table_name):
     """
     Endpoint alternativo para editar un registro.
     Se espera recibir el ID del registro a editar mediante un parámetro de query (por ejemplo, ?id=22).
@@ -383,12 +387,12 @@ def editar(table_name):
     record_id = request.args.get("id")
     if record_id is None:
         flash("No se especificó el ID del registro a editar.", "danger")
-        return redirect(url_for("dynamic.tabla", table_name=table_name))
+        return redirect(url_for("dynamic.table_view", table_name=table_name))
 
     record = model.query.get(record_id)
     if not record:
         flash(f"Registro con ID {record_id} no encontrado en '{table_name}'.", "danger")
-        return redirect(url_for("dynamic.tabla", table_name=table_name))
+        return redirect(url_for("dynamic.table_view", table_name=table_name))
 
     if request.method == "POST":
         try:
@@ -417,13 +421,12 @@ def editar(table_name):
         except Exception as e:
             db.session.rollback()
             flash(f"Error al actualizar el registro: {str(e)}", "danger")
-        return redirect(url_for("dynamic.tabla", table_name=table_name))
+        return redirect(url_for("dynamic.table_view", table_name=table_name))
 
 
-@dynamic_bp.route("/<table_name>/datos/<id_registro>", methods=["GET"])
+@dynamic_bp.route("/<table_name>/data/<id_registro>", methods=["GET"])
 @login_required
-
-def datos_registro(table_name,id_registro):
+def record_data(table_name,id_registro):
     model = get_model_by_name(table_name)
     if not model:
         return jsonify({"error": f"La tabla '{table_name}' no existe."}), 404
@@ -462,7 +465,7 @@ def datos_registro(table_name,id_registro):
     # Aplicar paginación
     records = query.all()
     def record_to_ordered_list(record, table_name):
-        orden_columnas = get_orden_columnas_modal().get(table_name)
+        columns_order = get_columns_order().get(table_name)
         ordered_fields = []
 
         if hasattr(record, "_mapping"):
@@ -489,8 +492,8 @@ def datos_registro(table_name,id_registro):
                 base_data[fk_field] = record_mapping[label_name]
                 
         # Step 4: Build ordered output based on config
-        if orden_columnas:
-            for col in orden_columnas:
+        if columns_order:
+            for col in columns_order:
                 # Support dotted notation: Roles.nombre -> id_rol_nombre
                 if "." in col:
                     table_alias, column_name = col.split(".")

@@ -1,7 +1,7 @@
 <div class="flex justify-end items-center gap-2" x-data x-show="true">
     <template x-if="$store.modalData.record">
         <button type="submit"
-            @click.stop="window.location.href='/dynamic/ingresos/formulario?id_cuenta=' + $store.modalData.record.id_cuenta+'&id_categoria_de_ingreso='+$store.modalData.record.id_categoria_de_ingreso+'&importe='+$store.modalData.record.importe+'&notas='+$store.modalData.record.notas"
+            @click.stop="window.location.href='/dynamic/ingresos/form?id_cuenta=' + $store.modalData.record.id_cuenta+'&id_categoria_de_ingreso='+$store.modalData.record.id_categoria_de_ingreso+'&importe='+$store.modalData.record.importe+'&notas='+$store.modalData.record.notas"
             class="btn border text-primary border-transparent rounded-md transition-all duration-300 hover:text-white hover:bg-primary bg-primary/10">
             Crear Ingreso
         </button>

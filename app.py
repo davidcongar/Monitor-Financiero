@@ -9,7 +9,7 @@ from flask_migrate import Migrate
 from sqlalchemy import event, inspect
 
 from flask_session import Session
-from python.services.logs_auditoria import *
+from python.services.audit import *
 from python.models.modelos import db
 from python.services.authentication import *
 
@@ -49,9 +49,9 @@ migrate = Migrate(app, db)
 Session(app)
 
 # Eventos para auditoría
-event.listen(db.session, "before_flush", registrar_logs_auditoria)
-event.listen(db.session, "after_flush", registrar_logs_post_flush)
-event.listen(db.session, "after_commit", limpiar_bandera_auditoria)
+event.listen(db.session, "before_flush", add_logs_audit)
+event.listen(db.session, "after_flush", add_logs_post_flush)
+event.listen(db.session, "after_commit", clear_audit_flag)
 
 # Configuración del usuario en `g`
 @app.before_request
@@ -82,25 +82,25 @@ def run_tests():
 # Registro de Blueprints
 from python.routes.system.dynamic_routes import dynamic_bp
 from python.routes.system.errors import errors_bp
-from python.routes.system.generar_archivos import generar_archivos_bp
+from python.routes.system.files import files_bp
 from python.routes.system.home import home_bp
 from python.services.authentication import auth_bp
 from python.services.api import api_bp
-from python.routes.queries import queries_bp
+from python.routes.dashboard_queries import dashboard_queries_bp
 
 app.register_blueprint(errors_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(home_bp)
-app.register_blueprint(generar_archivos_bp)
+app.register_blueprint(files_bp)
 app.register_blueprint(dynamic_bp)
 app.register_blueprint(api_bp)
-app.register_blueprint(queries_bp)
+app.register_blueprint(dashboard_queries_bp)
 
-from python.routes.tableros import tableros_bp
-from python.routes.reportes import reportes_bp
+from python.routes.dashboards import dashboards_bp
+from python.routes.report_queries import report_queries_bp
 
-app.register_blueprint(tableros_bp)
-app.register_blueprint(reportes_bp)
+app.register_blueprint(dashboards_bp)
+app.register_blueprint(report_queries_bp)
 
 
 
@@ -111,7 +111,7 @@ TABLES_CACHE = {}
 
 
 # Definir tablas a omitir
-OMITIR_TABLAS = [
+OMIT_TABLES = [
     f"alembic_version",
     f"logs_auditoria",
     f"archivos",
@@ -122,7 +122,7 @@ OMITIR_TABLAS = [
 
 
 def load_table_names():
-    """Carga los nombres de las tablas disponibles, excluyendo las especificadas en OMITIR_TABLAS."""
+    """Carga los nombres de las tablas disponibles, excluyendo las especificadas en OMIT_TABLES."""
     global TABLES_CACHE
     engine = db.engine
     inspector = db.inspect(engine)
@@ -131,7 +131,7 @@ def load_table_names():
     filtered_tables = [
         table
         for table in inspector.get_table_names()
-        if table not in OMITIR_TABLAS
+        if table not in OMIT_TABLES
     ]
 
     # Formatear nombres y almacenar en caché

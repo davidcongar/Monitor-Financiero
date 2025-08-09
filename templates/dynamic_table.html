@@ -7,11 +7,11 @@
 {% include "./partials/alerts.html" %}
 <!-- Breadcrumb -->
 {% include 'partials/table/breadcrumbs.html' %}
-<!-- Elemento oculto para pasar datos al JS: nombre de tabla y columnas -->
+<!-- Elemento oculto para pasar data al JS: nombre de tabla y columnas -->
 {% if reporte %}
-    <div id="table-data" data-table="/reportes/{{ table_name }}/datos" data-columns='{{ columns|tojson }}'></div>
+    <div id="table-data" data-table="/reports_queries/{{ table_name }}/data" data-columns='{{ columns|tojson }}'></div>
 {% else %}
-    <div id="table-data" data-table="/dynamic/{{ table_name }}/datos" data-columns='{{ columns|tojson }}'></div>
+    <div id="table-data" data-table="/dynamic/{{ table_name }}/data" data-columns='{{ columns|tojson }}'></div>
 {% endif %}
 
 <div class="flex flex-col gap-5 min-h-[calc(100vh-188px)] sm:min-h-[calc(100vh-204px)]">
@@ -41,8 +41,8 @@
                                             </span>
                                         </td>
                                     </template>
-                                    {% if table_name=='noticias' %}
-                                        {% include 'partials/table/botones/noticias.html' %}
+                                    {% if table_buttons %}
+                                        {% include 'partials/table/buttons/' ~ table_name ~ '.html' %}
                                     {% endif %}   
                                 </tr>
                             </template>
@@ -56,7 +56,7 @@
 
                     </table>
                 </div>
-                {% include 'partials/table/paginacion.html' %}
+                {% include 'partials/table/pagination.html' %}
             </div>
         </div>
         {% include 'partials/table/modals/dynamic_modal.html' %}
@@ -69,8 +69,8 @@
 <script src="/static/js/loader.js"></script>
 <script src="/static/js/dynamic_table_init.js"></script>
 <script src="/static/js/format_functions.js"></script>
-<script src="/static/js/generar_archivos.js"></script>
-<script src="/static/js/descargar_archivo.js"></script>
+<script src="/static/js/generate_files.js"></script>
+<script src="/static/js/download_file.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>  

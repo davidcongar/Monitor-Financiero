@@ -13,8 +13,8 @@ home_bp = Blueprint("home", __name__,url_prefix="/")
 
 @home_bp.route("/", methods=["GET"])
 @login_required
-def inicio():
-    return redirect(url_for("tableros.inicio"))
+def home():
+    return redirect(url_for("dashboards.home"))
 
 @home_bp.route("/generate-presigned-url", methods=["POST"])
 @login_required

@@ -51,12 +51,12 @@
 <div class="flex flex-col gap-5 min-h-[calc(100vh-188px)] sm:min-h-[calc(100vh-204px)]">
     <div class="grid grid-cols-1 gap-5">
         <div class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg">
-            <!-- Título del formulario -->
+            <!-- Título del form -->
             <h2 class="text-base font-semibold mb-4">
                 {{ action }} en {{ table_name|title_format }}
             </h2>
-            <!-- Formulario -->
-            <form method="POST" class="space-y-4" id="dynamic_form"  action="/dynamic/{{ table_name }}/{{ 'editar?id=' ~ record.id if record else 'registrar' }}" enctype="multipart/form-data">
+            <!-- form -->
+            <form method="POST" class="space-y-4" id="dynamic_form"  action="/dynamic/{{ table_name }}/{{ 'edit?id=' ~ record.id if record else 'add' }}" enctype="multipart/form-data">
                 {% for column in columns %}
                     {% if column != "id" %}
                     <div class="space-y-2">
@@ -156,7 +156,7 @@
                         class="btn border text-primary border-transparent rounded-md transition-all duration-300 hover:text-white hover:bg-primary bg-primary/10">
                         Guardar
                     </button>
-                    <a href="{{ url_for('dynamic.tabla', table_name=table_name) }}"
+                    <a href="{{ url_for('dynamic.table_view', table_name=table_name) }}"
                     class="btn border text-danger border-transparent rounded-md transition-all duration-300 hover:text-white hover:bg-danger bg-danger/10">
                         Cancelar
                     </a>

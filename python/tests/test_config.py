@@ -1,6 +1,6 @@
 # python/tests/test_config.py
 
-from python.services.send_email import send_html_email
+from python.services.email import send_html_email
 
 # variables de configuración
 SYSTEM_NAME = "Monitor Financiero"

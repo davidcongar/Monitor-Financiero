@@ -1,0 +1,183 @@
+{% extends './partials/layout1.html' %}
+{% include 'partials/flash_alerts.html' %}
+{% block content %}
+{% include 'partials/alerts.html' %}
+<div id="main" class="flex flex-col gap-5 min-h-[calc(100vh-188px)] sm:min-h-[calc(100vh-204px)]">
+    <div class="grid grid-cols-1 xl:grid-cols-1 gap-5">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg space-y-6">
+                <div class="flex items-center gap-2.5 justify-center">
+                    <span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M18.4697 13.4697C18.7626 13.1768 19.2374 13.1768 19.5303 13.4697L21.5303 15.4697C21.8232 15.7626 21.8232 16.2374 21.5303 16.5303C21.2374 16.8232 20.7626 16.8232 20.4697 16.5303L19.75 15.8107V20C19.75 20.4142 19.4142 20.75 19 20.75C18.5858 20.75 18.25 20.4142 18.25 20V15.8107L17.5303 16.5303C17.2374 16.8232 16.7626 16.8232 16.4697 16.5303C16.1768 16.2374 16.1768 15.7626 16.4697 15.4697L18.4697 13.4697Z" fill="#FF7C51"/>
+                            <path opacity="0.3" d="M10 4H14C17.7712 4 19.6569 4 20.8284 5.17157C21.672 6.01511 21.9082 7.22882 21.9743 9.25H2.02572C2.09185 7.22882 2.32803 6.01511 3.17157 5.17157C4.34315 4 6.22876 4 10 4Z" fill="#FF7C51"/>
+                            <path opacity="0.3" fill-rule="evenodd" clip-rule="evenodd" d="M10 20H14C15.0559 20 15.964 20 16.75 19.9743V18.2362C16.2601 18.1817 15.7847 17.9666 15.409 17.591C14.5303 16.7123 14.5303 15.2877 15.409 14.409L17.409 12.409C18.2877 11.5303 19.7123 11.5303 20.591 12.409L21.9937 13.8118C22 13.2613 22 12.6595 22 12C22 11.5581 22 11.142 21.9981 10.75H2.00189C2 11.142 2 11.5581 2 12C2 15.7712 2 17.6569 3.17157 18.8284C4.34315 20 6.22876 20 10 20ZM5.25 16C5.25 15.5858 5.58579 15.25 6 15.25H10C10.4142 15.25 10.75 15.5858 10.75 16C10.75 16.4142 10.4142 16.75 10 16.75H6C5.58579 16.75 5.25 16.4142 5.25 16ZM12.5 15.25C12.0858 15.25 11.75 15.5858 11.75 16C11.75 16.4142 12.0858 16.75 12.5 16.75H14C14.4142 16.75 14.75 16.4142 14.75 16C14.75 15.5858 14.4142 15.25 14 15.25H12.5Z" fill="#FF7C51"/>
+                        </svg>
+                    </span>
+                    <p class="font-semibold">Ingreso mes actual</p>
+                </div>
+                <div class="flex gap-2.5 xl:gap-[30px] flex-wrap grid-cols-2 justify-center">
+                    <span class="text-lg font-bold">     
+                        ${{ingreso_mensual.current_month | commafy}}
+                    </span>
+                    {% if ingreso_mensual is not none and ingreso_mensual.change<0 %}
+                    <span class="bg-success/10 text-success flex items-center gap-1 rounded-full py-1 px-2.5 text-xs">
+                        {{ingreso_mensual.change | commafy}}%
+                        <span>
+                            <svg width="10" height="10" class="inline-block" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(180deg);">
+                                <path d="M5.73684 9.21053C5.73684 9.64654 5.38338 10 4.94737 10C4.51135 10 4.15789 9.64654 4.15789 9.21053L4.15789 2.69543L2.34772 4.50561C2.03941 4.81392 1.53954 4.81392 1.23123 4.50561C0.922923 4.1973 0.922923 3.69743 1.23123 3.38913L4.38913 0.231232C4.53718 0.0831764 4.73799 -1.83028e-08 4.94737 0C5.15675 1.83066e-08 5.35756 0.0831765 5.50561 0.231232L8.66351 3.38913C8.97181 3.69743 8.97181 4.1973 8.66351 4.50561C8.3552 4.81392 7.85533 4.81392 7.54702 4.50561L5.73684 2.69543V9.21053Z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                    </span>
+                    {% else %}
+                    <span class="bg-danger/10 text-danger flex items-center gap-1 rounded-full py-1 px-2.5 text-xs">
+                        {{ingreso_mensual.change | commafy}}%
+                        <span>
+                            <svg width="10" height="10" class="inline-block" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5.73684 9.21053C5.73684 9.64654 5.38338 10 4.94737 10C4.51135 10 4.15789 9.64654 4.15789 9.21053L4.15789 2.69543L2.34772 4.50561C2.03941 4.81392 1.53954 4.81392 1.23123 4.50561C0.922923 4.1973 0.922923 3.69743 1.23123 3.38913L4.38913 0.231232C4.53718 0.0831764 4.73799 -1.83028e-08 4.94737 0C5.15675 1.83066e-08 5.35756 0.0831765 5.50561 0.231232L8.66351 3.38913C8.97181 3.69743 8.97181 4.1973 8.66351 4.50561C8.3552 4.81392 7.85533 4.81392 7.54702 4.50561L5.73684 2.69543V9.21053Z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg space-y-6">
+                <div class="flex items-center gap-2.5 justify-center">
+                    <span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M18.4697 13.4697C18.7626 13.1768 19.2374 13.1768 19.5303 13.4697L21.5303 15.4697C21.8232 15.7626 21.8232 16.2374 21.5303 16.5303C21.2374 16.8232 20.7626 16.8232 20.4697 16.5303L19.75 15.8107V20C19.75 20.4142 19.4142 20.75 19 20.75C18.5858 20.75 18.25 20.4142 18.25 20V15.8107L17.5303 16.5303C17.2374 16.8232 16.7626 16.8232 16.4697 16.5303C16.1768 16.2374 16.1768 15.7626 16.4697 15.4697L18.4697 13.4697Z" fill="#FF7C51"/>
+                            <path opacity="0.3" d="M10 4H14C17.7712 4 19.6569 4 20.8284 5.17157C21.672 6.01511 21.9082 7.22882 21.9743 9.25H2.02572C2.09185 7.22882 2.32803 6.01511 3.17157 5.17157C4.34315 4 6.22876 4 10 4Z" fill="#FF7C51"/>
+                            <path opacity="0.3" fill-rule="evenodd" clip-rule="evenodd" d="M10 20H14C15.0559 20 15.964 20 16.75 19.9743V18.2362C16.2601 18.1817 15.7847 17.9666 15.409 17.591C14.5303 16.7123 14.5303 15.2877 15.409 14.409L17.409 12.409C18.2877 11.5303 19.7123 11.5303 20.591 12.409L21.9937 13.8118C22 13.2613 22 12.6595 22 12C22 11.5581 22 11.142 21.9981 10.75H2.00189C2 11.142 2 11.5581 2 12C2 15.7712 2 17.6569 3.17157 18.8284C4.34315 20 6.22876 20 10 20ZM5.25 16C5.25 15.5858 5.58579 15.25 6 15.25H10C10.4142 15.25 10.75 15.5858 10.75 16C10.75 16.4142 10.4142 16.75 10 16.75H6C5.58579 16.75 5.25 16.4142 5.25 16ZM12.5 15.25C12.0858 15.25 11.75 15.5858 11.75 16C11.75 16.4142 12.0858 16.75 12.5 16.75H14C14.4142 16.75 14.75 16.4142 14.75 16C14.75 15.5858 14.4142 15.25 14 15.25H12.5Z" fill="#FF7C51"/>
+                        </svg>
+                    </span>
+                    <p class="font-semibold">Ingreso promedio mensual del año actual</p>
+                </div>
+                <div class="flex items-center gap-2.5 justify-center">
+                    <span class="text-lg font-bold">     
+                        ${{ingreso_anual.monthly_average | commafy}}
+                    </span>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg space-y-6">
+                <div class="flex items-center gap-2.5 justify-center">
+                    <span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M18.4697 13.4697C18.7626 13.1768 19.2374 13.1768 19.5303 13.4697L21.5303 15.4697C21.8232 15.7626 21.8232 16.2374 21.5303 16.5303C21.2374 16.8232 20.7626 16.8232 20.4697 16.5303L19.75 15.8107V20C19.75 20.4142 19.4142 20.75 19 20.75C18.5858 20.75 18.25 20.4142 18.25 20V15.8107L17.5303 16.5303C17.2374 16.8232 16.7626 16.8232 16.4697 16.5303C16.1768 16.2374 16.1768 15.7626 16.4697 15.4697L18.4697 13.4697Z" fill="#FF7C51"/>
+                            <path opacity="0.3" d="M10 4H14C17.7712 4 19.6569 4 20.8284 5.17157C21.672 6.01511 21.9082 7.22882 21.9743 9.25H2.02572C2.09185 7.22882 2.32803 6.01511 3.17157 5.17157C4.34315 4 6.22876 4 10 4Z" fill="#FF7C51"/>
+                            <path opacity="0.3" fill-rule="evenodd" clip-rule="evenodd" d="M10 20H14C15.0559 20 15.964 20 16.75 19.9743V18.2362C16.2601 18.1817 15.7847 17.9666 15.409 17.591C14.5303 16.7123 14.5303 15.2877 15.409 14.409L17.409 12.409C18.2877 11.5303 19.7123 11.5303 20.591 12.409L21.9937 13.8118C22 13.2613 22 12.6595 22 12C22 11.5581 22 11.142 21.9981 10.75H2.00189C2 11.142 2 11.5581 2 12C2 15.7712 2 17.6569 3.17157 18.8284C4.34315 20 6.22876 20 10 20ZM5.25 16C5.25 15.5858 5.58579 15.25 6 15.25H10C10.4142 15.25 10.75 15.5858 10.75 16C10.75 16.4142 10.4142 16.75 10 16.75H6C5.58579 16.75 5.25 16.4142 5.25 16ZM12.5 15.25C12.0858 15.25 11.75 15.5858 11.75 16C11.75 16.4142 12.0858 16.75 12.5 16.75H14C14.4142 16.75 14.75 16.4142 14.75 16C14.75 15.5858 14.4142 15.25 14 15.25H12.5Z" fill="#FF7C51"/>
+                        </svg>
+                    </span>
+                    <p class="font-semibold">Ingreso total del año actual</p>
+                </div>
+                <div class="flex gap-2.5 xl:gap-[30px] flex-wrap grid-cols-2 justify-center">
+                    <span class="text-lg font-bold">     
+                        ${{ingreso_anual.current_year | commafy}}
+                    </span>
+                    {% if ingreso_anual is not none and ingreso_anual.change<0 %}
+                    <span class="bg-success/10 text-success flex items-center gap-1 rounded-full py-1 px-2.5 text-xs">
+                        {{ingreso_anual.change | commafy}}%
+                        <span>
+                            <svg width="10" height="10" class="inline-block" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(180deg);">
+                                <path d="M5.73684 9.21053C5.73684 9.64654 5.38338 10 4.94737 10C4.51135 10 4.15789 9.64654 4.15789 9.21053L4.15789 2.69543L2.34772 4.50561C2.03941 4.81392 1.53954 4.81392 1.23123 4.50561C0.922923 4.1973 0.922923 3.69743 1.23123 3.38913L4.38913 0.231232C4.53718 0.0831764 4.73799 -1.83028e-08 4.94737 0C5.15675 1.83066e-08 5.35756 0.0831765 5.50561 0.231232L8.66351 3.38913C8.97181 3.69743 8.97181 4.1973 8.66351 4.50561C8.3552 4.81392 7.85533 4.81392 7.54702 4.50561L5.73684 2.69543V9.21053Z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                    </span>
+                    {% else %}
+                    <span class="bg-danger/10 text-danger flex items-center gap-1 rounded-full py-1 px-2.5 text-xs">
+                        {{ingreso_anual.change | commafy}}%
+                        <span>
+                            <svg width="10" height="10" class="inline-block" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5.73684 9.21053C5.73684 9.64654 5.38338 10 4.94737 10C4.51135 10 4.15789 9.64654 4.15789 9.21053L4.15789 2.69543L2.34772 4.50561C2.03941 4.81392 1.53954 4.81392 1.23123 4.50561C0.922923 4.1973 0.922923 3.69743 1.23123 3.38913L4.38913 0.231232C4.53718 0.0831764 4.73799 -1.83028e-08 4.94737 0C5.15675 1.83066e-08 5.35756 0.0831765 5.50561 0.231232L8.66351 3.38913C8.97181 3.69743 8.97181 4.1973 8.66351 4.50561C8.3552 4.81392 7.85533 4.81392 7.54702 4.50561L5.73684 2.69543V9.21053Z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg space-y-6">
+                <div class="mb-[30px] flex items-center flex-wrap">
+                    <h2 class="flex-1 font-semibold">Ingreso mensual por categoría</h2>
+                    <div>
+                        <select id="select_ingreso_mensual_categoria_mes" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="generar_grafica('#ingreso_mensual_categoria','bar','categoria','importe',`/dashboard_queries/ingreso_mensual_categoria?year=${select_ingreso_mensual_categoria_year.value}&month=${select_ingreso_mensual_categoria_mes.value}`,{legend:{show:false},valueType: 'currency'})">
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                    </div>
+                    <div style="margin-left:10px">
+                        <select id="select_ingreso_mensual_categoria_year" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="generar_grafica('#ingreso_mensual_categoria','bar','categoria','importe',`/dashboard_queries/ingreso_mensual_categoria?year=${select_ingreso_mensual_categoria_year.value}&month=${select_ingreso_mensual_categoria_mes.value}`,{legend:{show:false},valueType: 'currency'})">
+                            {% for record in years %}
+                                <option value="{{ record.year }}">{{ record.year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div id="ingreso_mensual_categoria"></div>
+            </div>
+            <div class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg space-y-6">
+                <div class="mb-[30px] flex items-center flex-wrap">
+                    <h2 class="flex-1 font-semibold">Ingreso anual por categoría</h2>
+                    <div style="margin-left:10px">
+                        <select id="select_ingreso_anual_categoria_year" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="generar_grafica('#ingreso_anual_categoria','bar','categoria','importe',`/dashboard_queries/ingreso_anual_categoria?year=${select_ingreso_anual_categoria_year.value}`,{legend:{show:false},valueType: 'currency'})">
+                            {% for record in years %}
+                                <option value="{{ record.year }}">{{ record.year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div id="ingreso_anual_categoria"></div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-1 gap-5">
+            <div class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg space-y-6">
+                <div class="mb-[30px] flex items-center flex-wrap">
+                    <h2 class="flex-1 font-semibold">Ingreso mensual</h2>
+                    <div>
+                        <select id="select_ingreso_mensual_categoria" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="generar_grafica('#ingreso_mensual','line','year_mes','importe',`/dashboard_queries/manual/ingreso_mensual?year=${select_ingreso_mensual_year.value}&category=${select_ingreso_mensual_categoria.value}`,{legend:{show:false},valueType: 'currency'})">
+                            <option value="todas">Todas</option>
+                            {% for record in categorias %}
+                                <option value="{{ record.id }}">{{ record.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="margin-left:10px">
+                        <select id="select_ingreso_mensual_year" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="generar_grafica('#ingreso_mensual','line','year_mes','importe',`/dashboard_queries/manual/ingreso_mensual?year=${select_ingreso_mensual_year.value}&category=${select_ingreso_mensual_categoria.value}`,{legend:{show:false},valueType: 'currency'})">
+                            <option value="historico">Histórico</option>
+                            {% for record in years %}
+                                <option value="{{ record.year }}">{{ record.year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div id="ingreso_mensual"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script>
+<script src="/static/js/apex-ecom_copy.js"></script>
+<script src="/static/js/funciones_generales.js"></script>
+<script src="/static/js/charts/general.js"></script>
+<script src="/static/js/charts/waterfall.js"></script>
+<script>
+        const month = new Date().getMonth()+1; 
+        const year = new Date().getFullYear();
+        select_ingreso_mensual_categoria_mes.value = month;
+        select_ingreso_mensual_categoria_year.value = year;
+        select_ingreso_anual_categoria_year.value=year
+        generar_grafica('#ingreso_mensual_categoria', 'bar','categoria','importe','/dashboard_queries/ingreso_mensual_categoria?year='+year+'&month='+month,options={legend:{show:false},valueType: 'currency'})
+        generar_grafica('#ingreso_anual_categoria', 'bar','categoria','importe','/dashboard_queries/ingreso_anual_categoria?year='+year,options={legend:{show:false},valueType: 'currency'})
+        generar_grafica('#ingreso_mensual', 'line','year_mes','importe','/dashboard_queries/manual/ingreso_mensual?year=historico&category=todas',options={legend:{show:false},valueType: 'currency'})
+</script>
+{% endblock content %}

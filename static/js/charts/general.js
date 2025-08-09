@@ -28,6 +28,7 @@ function generar_grafica_categorias(nombre_grafica, tipo_grafica,x_key,y_key,z_k
         });
 }
 function generar_grafica(nombre_grafica, tipo_grafica,dataXKey, dataYKey,path,options) {
+    console.log(path)
     fetch(path)
         .then(response => {
             if (!response.ok) {

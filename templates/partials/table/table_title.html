@@ -4,7 +4,7 @@
         <!-- Botón para agregar nuevo registro -->
          {% if not reporte and table_name not in ('negocios_apple_pay') %}
             <div class="flex justify-end">
-                <a href="{{ url_for('dynamic.formulario', table_name=table_name)}}" class="border w-10 h-10 flex items-center justify-center text-primary border-transparent rounded-md transition-all duration-300 hover:text-white hover:bg-primary bg-primary/10">
+                <a href="{{ url_for('dynamic.form', table_name=table_name)}}" class="border w-10 h-10 flex items-center justify-center text-primary border-transparent rounded-md transition-all duration-300 hover:text-white hover:bg-primary bg-primary/10">
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M13 7L7 7M7 7L1 7M7 7L7 1M7 7L7 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                     </svg>
@@ -12,7 +12,7 @@
             </div>
         {% endif %}
         <!-- Botón para generar Excel -->
-        <button id="export_button" onclick="generarExcel('{{ table_name }}')" type="button"
+        <button id="export_button" onclick="generate_excel('{{ table_name }}')" type="button"
             class="border w-10 h-10 flex items-center justify-center text-primary border-transparent rounded-md transition-all duration-300 hover:text-white hover:bg-primary bg-primary/10">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
@@ -39,8 +39,11 @@
         </select>
     </div>
     <div class="flex items-center space-x-2">
-        <input id="dateRange" x-model="dateRange" type="text" class="form-input" placeholder="Rango de fechas...">
+        {% if 'fecha' in columns %}
+            <input id="dateRange" x-model="dateRange" type="text" class="form-input" placeholder="Rango de fechas...">
+        {% else %}
+        {% endif %}
+ 
         <input id="search" x-model="searchInput" type="text" class="form-input" placeholder="Buscar...">
     </div>
 </div>
-<script src="/static/js/generar_archivos.js"></script>
