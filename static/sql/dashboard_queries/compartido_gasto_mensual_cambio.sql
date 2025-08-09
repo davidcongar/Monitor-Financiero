@@ -3,8 +3,8 @@ with current_month as (
   from gastos  
   where 
     concat(EXTRACT(YEAR FROM fecha),EXTRACT(MONTH FROM fecha))=concat(EXTRACT(YEAR FROM current_date),EXTRACT(MONTH FROM current_date))
-    and (id_usuario = :id_usuario or id_usuario=:id_shared_user)
-    and shared_expense='Si'
+    and (id_usuario = :id_usuario or id_usuario=:id_usuario_conectado)
+    and gasto_compartido='Si'
 ),
 previous_month as (
   SELECT SUM(importe) AS previous_month
@@ -19,8 +19,8 @@ previous_month as (
       (EXTRACT(MONTH FROM current_date) != 1 AND 
       CONCAT(EXTRACT(YEAR FROM fecha), EXTRACT(MONTH FROM fecha)) = 
       CONCAT(EXTRACT(YEAR FROM current_date), EXTRACT(MONTH FROM current_date) - 1))
-    AND (id_usuario = :id_usuario or id_usuario=:id_shared_user)
-    and shared_expense='Si'
+    AND (id_usuario = :id_usuario or id_usuario=:id_usuario_conectado)
+    and gasto_compartido='Si'
 ),
 previous_two_month as (
   SELECT SUM(importe) AS previous_two_month
@@ -35,8 +35,8 @@ previous_two_month as (
       (EXTRACT(MONTH FROM current_date) != 1 AND 
       CONCAT(EXTRACT(YEAR FROM fecha), EXTRACT(MONTH FROM fecha)) = 
       CONCAT(EXTRACT(YEAR FROM current_date), EXTRACT(MONTH FROM current_date) - 2))
-      AND (id_usuario = :id_usuario or id_usuario=:id_shared_user)
-      and shared_expense='Si'
+      AND (id_usuario = :id_usuario or id_usuario=:id_usuario_conectado)
+      and gasto_compartido='Si'
 )
 select
   coalesce(previous_two_month,0) as previous_two_month,

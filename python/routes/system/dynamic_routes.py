@@ -223,43 +223,34 @@ def data(table_name):
     status = request.args.get("status", "", type=str)
     dateRange=request.args.get("dateRange", "", type=str)
 
-    if table_name in ('usuarios','logs_auditoria'):
+    if table_name in ("usuarios", "logs_auditoria"):
         query = model.query
     else:
-        query = model.query.filter_by(id_usuario=session['id_usuario'])
+        query = model.query.filter_by(id_usuario=session["id_usuario"])
 
     # Agregar joins condicionales
     joins = get_joins()
-    table_aliases = {}
     filtered_joins = {
         field: val for field, val in joins.items() if field in model.__table__.columns
     }
 
     for field, (table, id_column, name_column) in filtered_joins.items():
-        if field in model.__table__.columns:
-            table_key = table.__tablename__
+        # Asegura que el campo exista en el modelo base
+        if field not in model.__table__.columns:
+            continue
 
-            if table_key not in table_aliases:
-                table_aliases[table_key] = []
+        # Crea un alias único por campo (soporta varias uniones al mismo modelo)
+        alias = aliased(table, name=f"{table.__tablename__}__{field}")
 
-            if table_aliases[table_key]:
-                alias = aliased(table)
-                table_aliases[table_key].append(alias)
-                join_model = alias
-                # alias the id_column and name_column too
-                id_column = getattr(alias, id_column.key)
-                name_column = getattr(alias, name_column.key)
-            else:
-                table_aliases[table_key].append(table)
-                join_model = table
+        # Re-vincula columnas al alias
+        alias_id_col = getattr(alias, id_column.key)
+        alias_name_col = getattr(alias, name_column.key)
 
-            # Now the join uses the correct id_column for this alias
-            query = query.outerjoin(
-                join_model, id_column == getattr(model, field)
-            ).add_columns(
-                name_column.label(f"{field}_{name_column.key}")
-            )
-
+        # Join explícito y ON explícito contra el modelo base
+        query = (
+            query.outerjoin(alias, alias_id_col == getattr(model, field))
+                .add_columns(alias_name_col.label(f"{field}_{name_column.key}"))
+        )
 
     # Aplicar búsqueda
     if search:
@@ -376,7 +367,6 @@ def delete(table_name):
 
 @dynamic_bp.route("/<table_name>/edit", methods=["GET", "POST"])
 @login_required
-
 def edit(table_name):
     """
     Endpoint alternativo para editar un registro.
@@ -426,7 +416,6 @@ def edit(table_name):
             flash(f"Error al actualizar el registro: {str(e)}", "danger")
         return redirect(url_for("dynamic.table_view", table_name=table_name))
 
-
 @dynamic_bp.route("/<table_name>/data/<id_registro>", methods=["GET"])
 @login_required
 def record_data(table_name,id_registro):
@@ -439,30 +428,27 @@ def record_data(table_name,id_registro):
 
     # Agregar joins condicionales
     joins = get_joins()
-    table_aliases = {}
     filtered_joins = {
         field: val for field, val in joins.items() if field in model.__table__.columns
     }
 
     for field, (table, id_column, name_column) in filtered_joins.items():
-        if field in model.__table__.columns:
-            table_key = table.__tablename__
+        # Asegura que el campo exista en el modelo base
+        if field not in model.__table__.columns:
+            continue
 
-            if table_key not in table_aliases:
-                table_aliases[table_key] = []
+        # Crea un alias único por campo (soporta varias uniones al mismo modelo)
+        alias = aliased(table, name=f"{table.__tablename__}__{field}")
 
-            if table_aliases[table_key]:
-                alias = aliased(table)
-                table_aliases[table_key].append(alias)
-                join_model = alias
-            else:
-                table_aliases[table_key].append(table)
-                join_model = table
+        # Re-vincula columnas al alias
+        alias_id_col = getattr(alias, id_column.key)
+        alias_name_col = getattr(alias, name_column.key)
 
-            # JOIN and add column with alias
-            query = query.outerjoin(join_model, id_column == getattr(model, field)).add_columns(
-                name_column.label(f"{field}_{name_column.key}")
-            )
+        # Join explícito y ON explícito contra el modelo base
+        query = (
+            query.outerjoin(alias, alias_id_col == getattr(model, field))
+                .add_columns(alias_name_col.label(f"{field}_{name_column.key}"))
+        )
 
     query=query.filter(model.id == id_registro)
     # Aplicar paginación

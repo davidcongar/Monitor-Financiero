@@ -20,7 +20,17 @@ class Usuarios(db.Model,BaseMixin):
     nombre = db.Column(db.String(1000), nullable=False)
     correo_electronico = db.Column(db.String(120), unique=True, nullable=False)
     contrasena = db.Column(db.String(255), nullable=False)
+    contrasena_api=db.Column(db.UUID(as_uuid=True), default=uuid.uuid4)
+    id_usuario_conectado=db.Column(db.UUID, db.ForeignKey("usuarios.id"), nullable=True)
     estatus = db.Column(db.String(255),default="Activo")
+
+    usuario_conectado = db.relationship(
+        "Usuarios",
+        foreign_keys=[id_usuario_conectado],
+        remote_side="Usuarios.id",
+        backref=db.backref("conectado_por", uselist=False, lazy="select"),
+        lazy="select"
+    )
 
     # Métodos
     def set_password(self, password):

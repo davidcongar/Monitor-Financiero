@@ -1,0 +1,38 @@
+            <div class="flex flex-col gap-5 min-h-[calc(100vh-188px)] sm:min-h-[calc(100vh-204px)]">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div id="table_income" class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-base font-semibold mb-4">Mensual</h2>
+                        </div>        
+                        <div class="table-container">
+                            <table class="min-w-[640px] w-full product-table table-striped" id="monthly_summary_table">
+                            <tbody>
+                                {% for record in monthly_shared_expenses %}
+                                <tr>
+                                    <td style="width:10%">{{ record.variable | remove_numbers}}</td>
+                                    <td style="width:10%">${{ record.value | commafy}}</td>
+                                </tr>
+                                {% endfor %}                         
+                            </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="table_income" class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-base font-semibold mb-4">Restante</h2>
+                        </div>        
+                        <div class="table-container">
+                            <table class="min-w-[640px] w-full product-table table-striped" id="general_summary_table">
+                            <tbody>
+                                {% for record in remaining_shared_expenses %}
+                                <tr>
+                                    <td style="width:10%">{{ record.variable | remove_numbers}}</td>
+                                    <td style="width:10%">${{ record.value | commafy}}</td>
+                                </tr>
+                                {% endfor %}                         
+                            </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>

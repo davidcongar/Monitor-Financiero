@@ -4,8 +4,8 @@ with current_year as (
   from gastos  
   where 
     EXTRACT(YEAR FROM fecha)=EXTRACT(YEAR FROM current_date)
-    and (id_usuario = :id_usuario or id_usuario=:id_shared_user)
-    and shared_expense='Si'
+    and (id_usuario = :id_usuario or id_usuario=:id_usuario_conectado)
+    and gasto_compartido='Si'
 ),
 previous_year as (
   SELECT 
@@ -13,8 +13,8 @@ previous_year as (
   FROM gastos
   WHERE 
     EXTRACT(YEAR FROM fecha)=EXTRACT(YEAR FROM current_date)-1
-    and (id_usuario = :id_usuario or id_usuario=:id_shared_user)
-    and shared_expense='Si'
+    and (id_usuario = :id_usuario or id_usuario=:id_usuario_conectado)
+    and gasto_compartido='Si'
 ),
 monthly_average as (
   select 
@@ -23,8 +23,8 @@ monthly_average as (
   from gastos  
   where 
     EXTRACT(YEAR FROM fecha)=EXTRACT(YEAR FROM current_date)
-    and (id_usuario = :id_usuario or id_usuario=:id_shared_user)
-    and shared_expense='Si'
+    and (id_usuario = :id_usuario or id_usuario=:id_usuario_conectado)
+    and gasto_compartido='Si'
    group by EXTRACT(month FROM fecha)
 ),
 monthly_average2 as (

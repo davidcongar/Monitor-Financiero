@@ -6,6 +6,7 @@ from flask import  jsonify
 def get_joins():
     joins = {
         "id_usuario": (Usuarios, Usuarios.id, Usuarios.nombre),
+        "id_usuario_conectado": (Usuarios, Usuarios.id, Usuarios.nombre),
         "id_cuenta": (Cuentas, Cuentas.id, Cuentas.nombre),
         "id_cuenta_salida": (Cuentas, Cuentas.id, Cuentas.nombre),
         "id_cuenta_entrada": (Cuentas, Cuentas.id, Cuentas.nombre),
@@ -47,7 +48,7 @@ def get_multiple_choice_data():
 
 def get_table_columns():
     columns = {
-        "usuarios":['id_visualizacion','nombre','correo_electronico','estatus'],
+        "usuarios":['id_visualizacion','nombre','correo_electronico','id_usuario_conectado','estatus'],
         "cuentas":['id_visualizacion','nombre','nombre_apple_pay','tipo','monto_credito','estatus'],
         "categorias_de_gastos":['id_visualizacion','nombre','estatus'],
         "categorias_de_ingresos":['id_visualizacion','nombre','estatus'],
@@ -69,7 +70,7 @@ def get_table_buttons():
 
 def get_columns_order():
     columns = {
-        "usuarios":['id','id_visualizacion','id','nombre','correo_electronico','estatus','fecha_de_creacion'],
+        "usuarios":['id','id_visualizacion','nombre','correo_electronico','id_usuario_conectado','contrasena_api','estatus','fecha_de_creacion'],
         "cuentas":['id','id_visualizacion','nombre','nombre_apple_pay','tipo','monto_credito','estatus','fecha_de_creacion','fecha_de_actualizacion'],
         "categorias_de_gastos":['id','id_visualizacion','nombre','estatus','fecha_de_creacion','fecha_de_actualizacion'],
         "categorias_de_ingresos":['id','id_visualizacion','nombre','estatus','fecha_de_creacion','fecha_de_actualizacion'],
@@ -113,7 +114,7 @@ def get_breadcrumbs(table_name):
     return modulo,active_menu
 
 def get_ignored_columns(table_name):
-    columnas_generales = {'fecha_de_creacion', 'estatus', 'id_usuario', 'id_visualizacion', 'fecha_de_actualizacion','contrasena'}
+    columnas_generales = {'fecha_de_creacion', 'estatus', 'id_usuario', 'id_visualizacion', 'fecha_de_actualizacion','contrasena','contrasena_api'}
     columns = {
         "gastos": {'id_negocio_apple_pay'} | columnas_generales,
         "negocios_apple_pay": {'nombre'} | columnas_generales,

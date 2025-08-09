@@ -23,7 +23,7 @@
             <div class="overflow-auto space-y-4" x-data="tabla" x-init="initData(); initDatePicker(); $watch('searchInput', value => { search(value) })">
                     {% include 'partials/table/table_title.html' %}
                 <div class="overflow-auto" style="max-height: 35rem;">
-                    <table class="w-full table-hover">
+                    <table class="w-full table-hover table-striped">
                             {% include 'partials/table/table_head.html' %}
                         <tbody>
                             <!-- Se recorre la lista de registros obtenidos dinámicamente -->

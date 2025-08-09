@@ -18,9 +18,13 @@ def title_format(value):
 def money_format(value):
     return f"${round(value, 2):,}"
 
+def remove_numbers(value):
+    # Convert the value to a string (in case it's a number) and remove all digits
+    return ''.join([char for char in str(value) if not char.isdigit()])
 
 # Ejemplo de uso
 
 app.jinja_env.filters["commafy"] = commafy
 app.jinja_env.filters["money_format"] = money_format
 app.jinja_env.filters["title_format"] = title_format
+app.jinja_env.filters["remove_numbers"] = remove_numbers

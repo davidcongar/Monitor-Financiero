@@ -17,7 +17,7 @@ class Ingresos(db.Model,BaseMixin,AuditMixin):
     cuenta = db.relationship("Cuentas", backref="ingreso", lazy=True)
     categoria = db.relationship("CategoriasDeIngresos", backref="ingreso", lazy=True)
 
-# Rrcurring income model
+# Recurring income model
 class IngresosRecurrentes(db.Model,BaseMixin,AuditMixin):
     id_cuenta = db.Column(db.UUID,db.ForeignKey('cuentas.id'),nullable=False)
     id_categoria_de_ingreso = db.Column(db.UUID,db.ForeignKey('categorias_de_ingresos.id'),nullable=False)

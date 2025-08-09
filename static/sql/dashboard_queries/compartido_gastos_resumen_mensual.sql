@@ -1,0 +1,69 @@
+with categorias as (
+  select * 
+  from categorias_de_gastos
+  where 
+    id_usuario=:id_usuario or id_usuario=:id_usuario_conectado
+),
+all_gastos as (
+  SELECT 
+      usuarios.nombre,
+      id_categoria_de_gasto,
+      fecha,
+      pagos_mensuales,
+      EXTRACT(MONTH FROM age(:fecha,(date_trunc('month', fecha) - INTERVAL '1 month')))+EXTRACT(YEAR FROM age(:fecha,(date_trunc('month', fecha) - INTERVAL '1 month')))*12 as meses_pagados,
+      importe AS importe_total,
+      importe / pagos_mensuales AS importe_mensual,
+      notas
+  FROM gastos
+  left join usuarios
+    on gastos.id_usuario=usuarios.id
+  WHERE gasto_compartido = 'Si' 
+  AND (gastos.id_usuario = :id_usuario or gastos.id_usuario=:id_usuario_conectado)
+),
+borrow_gastos as (
+  select concat('4Préstamos hechos por ',all_gastos.nombre) as variable,coalesce(sum(importe_mensual),0) as value
+  from all_gastos
+  left join categorias
+    on all_gastos.id_categoria_de_gasto=categorias.id
+  where categorias.nombre='Préstamos'
+    and meses_pagados<=pagos_mensuales
+    and meses_pagados>0
+  group by all_gastos.nombre
+),
+general_gastos as (
+  select concat('1',all_gastos.nombre) as variable,coalesce(sum(importe_mensual),0) as value
+  from all_gastos
+  left join categorias
+    on all_gastos.id_categoria_de_gasto=categorias.id
+  where categorias.nombre!='Préstamos'
+    and meses_pagados<=pagos_mensuales
+    and meses_pagados>0
+  group by all_gastos.nombre
+),
+total as (
+  select '2Gasto total del mes' as variable, coalesce(sum(value),0) as value from general_gastos
+),
+divided as (
+  select '3Gasto dividido del mes' as variable, coalesce(sum(value)/2,0) as value from general_gastos
+),
+debt as (
+  SELECT variable, value
+  FROM general_gastos
+  ORDER BY value
+  LIMIT 1
+),
+debt2 as (
+  select concat('5Deuda mes (',variable,')') as variable,gasto-value as debt 
+  from debt
+  cross join (select value as gasto from divided) as div
+)
+select * from general_gastos
+union
+select * from total
+union
+select * from divided
+union
+select * from borrow_gastos
+union
+select * from debt2
+order by variable
