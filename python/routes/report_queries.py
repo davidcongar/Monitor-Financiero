@@ -29,7 +29,7 @@ def report_queries(sql_name):
         "dynamic_table.html",
         columns=columns,
         table_name=table_name,
-        reporte=1
+        report=1
     )
 
 @report_queries_bp.route("/<string:sql_name>/data", methods=["GET"])

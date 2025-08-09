@@ -12,11 +12,11 @@ from python.services.files import ExcelService, PDFService
 
 files_bp = Blueprint("files", __name__, url_prefix="/files")
 
-@files_bp.route("/excel/<string:tabla>", methods=["GET"])
-def excel(tabla):
-    """Ruta para generar y descargar un archivo Excel de una tabla específica."""
+@files_bp.route("/excel/<string:kind>/<string:table>", methods=["GET"])
+def excel(table,kind):
+    """Ruta para generar y descargar un archivo Excel de una table específica."""
     try:
-        excel_content, error = ExcelService.generate_excel(tabla)
+        excel_content, error = ExcelService.generate_excel(table,kind)
 
 
         if error:
@@ -25,9 +25,9 @@ def excel(tabla):
         response = Response(
             excel_content,
             mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            headers={"Content-Disposition": f"attachment; filename={tabla}.xlsx"},
+            headers={"Content-Disposition": f"attachment; filename={table}.xlsx"},
         )
-        #flash(f"Se ha descargado el archivo: {tabla}.xlsx", "success")
+        #flash(f"Se ha descargado el archivo: {table}.xlsx", "success")
         return response
     except Exception as e:
         flash(f"Error inesperado: {str(e)}", "danger")
@@ -37,23 +37,23 @@ def excel(tabla):
 def pdf():
     """Generar y descargar un archivo PDF con los datos de un registro."""
     try:
-        tabla = request.args.get("tabla")
+        table = request.args.get("table")
         registro_id = request.args.get("id")
         logo= "./static/images/logo-dark.png"
 
-        if not tabla or not registro_id:
+        if not table or not registro_id:
             flash(
-                "Error: No se proporcionó el nombre de la tabla o el ID del registro.",
+                "Error: No se proporcionó el nombre de la table o el ID del registro.",
                 "danger",
             )
         
-        pdf_content, error = PDFService.generate_pdf(tabla, registro_id, logo)
+        pdf_content, error = PDFService.generate_pdf(table, registro_id, logo)
 
         if error:
             flash(f"No se pudo generar el archivo PDF: {error}", "danger")
         else:
             flash(
-                f"El archivo PDF para el registro {registro_id} de {tabla} se generó correctamente.",
+                f"El archivo PDF para el registro {registro_id} de {table} se generó correctamente.",
                 "success",
             )
 
@@ -61,7 +61,7 @@ def pdf():
             pdf_content,
             mimetype="application/pdf",
             headers={
-                "Content-Disposition": f"attachment; filename={tabla}_{registro_id}.pdf"
+                "Content-Disposition": f"attachment; filename={table}_{registro_id}.pdf"
             },
         )
         return response

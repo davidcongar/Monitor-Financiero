@@ -2,7 +2,7 @@
     <h2 class="text-base font-semibold mb-4">{{ table_name|title_format }}</h2>
     <div class="flex space-x-2 items-center">
         <!-- Botón para agregar nuevo registro -->
-         {% if not reporte and table_name not in ('negocios_apple_pay') %}
+        {% if not report and table_name not in ('negocios_apple_pay') %}
             <div class="flex justify-end">
                 <a href="{{ url_for('dynamic.form', table_name=table_name)}}" class="border w-10 h-10 flex items-center justify-center text-primary border-transparent rounded-md transition-all duration-300 hover:text-white hover:bg-primary bg-primary/10">
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -12,7 +12,8 @@
             </div>
         {% endif %}
         <!-- Botón para generar Excel -->
-        <button id="export_button" onclick="generate_excel('{{ table_name }}')" type="button"
+        {% set kind = 'report' if report else 'model' %}
+        <button id="export_button" type="button" onclick="generate_excel('{{ table_name }}', '{{ kind }}')"
             class="border w-10 h-10 flex items-center justify-center text-primary border-transparent rounded-md transition-all duration-300 hover:text-white hover:bg-primary bg-primary/10">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                 xmlns="http://www.w3.org/2000/svg">

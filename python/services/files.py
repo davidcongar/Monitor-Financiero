@@ -15,15 +15,27 @@ from svglib.svglib import svg2rlg
 import os
 from python.models import db
 from static.Tablas.tablas import tabla_uno, tabla_dos
-
+from python.services.helper_functions import *
+from flask import request
 
 class ExcelService:
     @staticmethod
-    def generate_excel(table_name):
+    def generate_excel(table_name,kind):
         """Exporta los datos de una tabla a un archivo Excel."""
         try:
-            query = text(f"SELECT * FROM {table_name}")
-            result = db.session.execute(query)
+            params = {}
+            params['id_usuario'] = session['id_usuario']
+            if kind=='model':
+                query = text(f"SELECT * FROM {table_name} where id_usuario=:id_usuario")
+                result = db.session.execute(query,params)
+            elif kind=='report':
+                path = './static/sql/report_queries/'+table_name+'.sql'
+                base_query = open(path, "r", encoding="utf-8").read()
+                variables_query = extract_param_names(base_query)
+                variables_request = {k: v for k, v in request.values.items() if k in variables_query and v != ""}
+                if "id_usuario" in variables_query:
+                    variables_request["id_usuario"] = session["id_usuario"]
+                result=db.session.execute(text(base_query),variables_request)
 
             rows = [dict(row) for row in result.mappings()]
 

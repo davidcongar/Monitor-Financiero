@@ -8,7 +8,7 @@
 <!-- Breadcrumb -->
 {% include 'partials/table/breadcrumbs.html' %}
 <!-- Elemento oculto para pasar data al JS: nombre de tabla y columnas -->
-{% if reporte %}
+{% if report %}
     <div id="table-data" data-table="/report_queries/{{ table_name }}/data" data-columns='{{ columns|tojson }}'></div>
 {% else %}
     <div id="table-data" data-table="/dynamic/{{ table_name }}/data" data-columns='{{ columns|tojson }}'></div>
@@ -18,8 +18,6 @@
     <div class="grid grid-cols-1 gap-5">
         {% if tabs_exist %}
             {% include 'partials/table/tabs/' ~ table_name ~ '.html' %}
-        {% else %}
-            <!-- Optionally, display something else or do nothing -->
         {% endif %}
         <div id="view_test" class="sticky top-0 bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg">
             <div class="overflow-auto space-y-4" x-data="tabla" x-init="initData(); initDatePicker(); $watch('searchInput', value => { search(value) })">

@@ -1,7 +1,10 @@
 // static/js/generate_excel.js
 
-function generate_excel(tabla) {
-    const url = `/files/excel/${tabla}`;
+function generate_excel(table,kind) {
+    const baseUrl = `/files/excel/${kind}/${table}`;
+    const currentParams = window.location.search; // includes the "?" if present
+    const url = currentParams ? `${baseUrl}${currentParams}` : baseUrl;
+
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -14,7 +17,7 @@ function generate_excel(tabla) {
             const a = document.createElement("a");
             a.style.display = "none";
             a.href = downloadUrl;
-            a.download = `${tabla}.xlsx`;
+            a.download = `${table}.xlsx`;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(downloadUrl);
