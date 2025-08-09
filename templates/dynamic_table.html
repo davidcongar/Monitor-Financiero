@@ -9,7 +9,7 @@
 {% include 'partials/table/breadcrumbs.html' %}
 <!-- Elemento oculto para pasar data al JS: nombre de tabla y columnas -->
 {% if reporte %}
-    <div id="table-data" data-table="/reports_queries/{{ table_name }}/data" data-columns='{{ columns|tojson }}'></div>
+    <div id="table-data" data-table="/report_queries/{{ table_name }}/data" data-columns='{{ columns|tojson }}'></div>
 {% else %}
     <div id="table-data" data-table="/dynamic/{{ table_name }}/data" data-columns='{{ columns|tojson }}'></div>
 {% endif %}

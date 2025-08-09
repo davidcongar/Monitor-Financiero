@@ -10,17 +10,14 @@ import io
 from PIL import Image, ImageDraw, ImageFont
 from python.services.helper_functions import *
 
-report_queries_bp = Blueprint("report_queris", __name__, url_prefix="/report_queris")
+report_queries_bp = Blueprint("report_queries", __name__, url_prefix="/report_queries")
 
-SQL_QUERIES = {
-    "movimientos_cuentas": "./static/sql/cuentas/movimientos.sql"
-}
 
 @report_queries_bp.route("/<string:sql_name>", methods=["GET"])
 @login_required
-def report_queris(sql_name):
+def report_queries(sql_name):
     table_name=sql_name
-    path = SQL_QUERIES.get(sql_name)
+    path = './static/sql/report_queries/'+sql_name+'.sql'
     base_query = open(path, "r", encoding="utf-8").read()
     variables_query = extract_param_names(base_query)
     variables_request = {k: v for k, v in request.values.items() if k in variables_query and v != ""}
@@ -38,7 +35,7 @@ def report_queris(sql_name):
 @report_queries_bp.route("/<string:sql_name>/data", methods=["GET"])
 @login_required
 def data(sql_name):
-    path = SQL_QUERIES.get(sql_name)
+    path = './static/sql/report_queries/'+sql_name+'.sql'
     with open(path, "r", encoding="utf-8") as f:
         base_query = f.read().strip()
 
@@ -54,6 +51,7 @@ def data(sql_name):
     sortField = request.args.get("sortField", "fecha", type=str)
     sortRule  = request.args.get("sortRule", "desc", type=str)
     page      = request.args.get("page", 1, type=int)
+    dateRange=request.args.get("dateRange", "", type=str)
 
     # 1) get columns from the base query (no rows)
     #    Postgres syntax for subquery alias; adjust alias quoting for other DBs if needed
@@ -68,12 +66,22 @@ def data(sql_name):
     # 2) build WHERE for search (case-insensitive). For Postgres, use ILIKE + CAST.
     where_clause = ""
     params = dict(variables_request)
+    ands = []
     if search:
         like_param = f"%{search}%"
         params["search"] = like_param
-        # ILIKE for Postgres; if MySQL/SQLite, change to LIKE and maybe LOWER(...)
         ors = " OR ".join([f"CAST({col} AS TEXT) ILIKE :search" for col in columns])
-        where_clause = f"WHERE ({ors})"
+        ands.append(f"({ors})")
+
+    if dateRange:
+        start_str, end_str = dateRange.split(" to ")
+        start_date = start_str.strip()
+        end_date = end_str.strip()
+        params["start_date"] = start_date
+        params["end_date"] = end_date
+        ands.append("(DATE(fecha) BETWEEN :start_date AND :end_date)")
+        
+    where_clause = f"WHERE {' AND '.join(ands)}" if ands else ""
 
     # 3) total count
     count_sql = text(f"""

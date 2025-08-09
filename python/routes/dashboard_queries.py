@@ -13,10 +13,10 @@ from PIL import Image, ImageDraw, ImageFont
 
 dashboard_queries_bp = Blueprint("dashboard_queries", __name__, url_prefix="/dashboard_queries")
 
-@dashboard_queries_bp.route("/<string:nombre_sql>", methods=["GET"])
+@dashboard_queries_bp.route("/<string:sql_name>", methods=["GET"])
 @login_required
-def sql_data(nombre_sql):
-    path = './static/sql/dashboard_queries/'+nombre_sql+'.sql'
+def sql_data(sql_name):
+    path = './static/sql/dashboard_queries/'+sql_name+'.sql'
     base_query = open(path, "r", encoding="utf-8").read()
     variables_query = extract_param_names(base_query)
     variables_request = {k: v for k, v in request.values.items() if k in variables_query and v != ""}

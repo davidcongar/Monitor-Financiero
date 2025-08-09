@@ -25,8 +25,12 @@
             </div>
         </th>
         {% endfor %}
-        {% for _ in range(number_buttons) %}
-            <th></th>
-        {% endfor %}
+        {% if number_buttons %}
+            {% for _ in range(number_buttons) %}
+                <th></th>
+            {% endfor %}
+        {% else %}
+            <!-- Optionally, display something else or do nothing -->
+        {% endif %}
     </tr>
 </thead>
