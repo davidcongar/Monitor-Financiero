@@ -30,7 +30,7 @@ def table_view(table_name):
     model = get_model_by_name(table_name)
     if not model:
         flash(f"La tabla '{table_name}' no existe.", "danger")
-        return redirect(url_for("home.inicio"))
+        return redirect(url_for("home.home"))
 
     # Obtener todos los registros de la tabla
     # Obtener las columnas definidas en el modelo
@@ -343,7 +343,7 @@ def delete(table_name):
     model = get_model_by_name(table_name)
     if not model:
         flash(f"La tabla '{table_name}' no existe.", "danger")
-        return redirect(url_for("home.inicio"))
+        return redirect(url_for("home.home"))
 
     record_id = request.args.get("id")  # Obtener como cadena
     if record_id is None:
@@ -385,7 +385,7 @@ def edit(table_name):
     model = get_model_by_name(table_name)
     if not model:
         flash(f"La tabla '{table_name.replace('_', ' ').capitalize()}' no existe.", "danger")
-        return redirect(url_for("home.inicio"))
+        return redirect(url_for("home.home"))
 
     record_id = request.args.get("id")
     if record_id is None:

@@ -87,7 +87,7 @@ def login_submit():
             session['nombre'] = usuario.nombre
             session['correo'] = usuario.correo_electronico
             flash(f"¡Bienvenido, {usuario.nombre}!", "success")
-            return redirect(url_for("home.inicio"))
+            return redirect(url_for("home.home"))
         else:
             flash("Información incorrecta. Inténtalo nuevamente.", "warning")
             return redirect(url_for("auth.login"))
