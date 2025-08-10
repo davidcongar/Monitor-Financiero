@@ -32,7 +32,6 @@ def table_view(table_name):
         flash(f"La tabla '{table_name}' no existe.", "danger")
         return redirect(url_for("home.home"))
 
-    # Obtener todos los registros de la tabla
     # Obtener las columnas definidas en el modelo
     columns=get_table_columns().get(table_name)
     if columns==None:

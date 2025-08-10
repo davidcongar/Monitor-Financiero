@@ -87,6 +87,9 @@ from python.routes.system.home import home_bp
 from python.services.authentication import auth_bp
 from python.services.api import api_bp
 from python.routes.dashboard_queries import dashboard_queries_bp
+from python.routes.dashboards import dashboards_bp
+from python.routes.report_queries import report_queries_bp
+from python.routes.reports import reports_bp
 
 app.register_blueprint(errors_bp)
 app.register_blueprint(auth_bp)
@@ -95,14 +98,9 @@ app.register_blueprint(files_bp)
 app.register_blueprint(dynamic_bp)
 app.register_blueprint(api_bp)
 app.register_blueprint(dashboard_queries_bp)
-
-from python.routes.dashboards import dashboards_bp
-from python.routes.report_queries import report_queries_bp
-
 app.register_blueprint(dashboards_bp)
 app.register_blueprint(report_queries_bp)
-
-
+app.register_blueprint(reports_bp)
 
 from python.services.template_formats import *
 

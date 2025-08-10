@@ -62,3 +62,15 @@ class LogsAuditoria(db.Model):
             f"<LogsAuditoria {self.accion} en {self.tabla} registro {self.id_registro}>"
         )
 
+class CategoriasDeReportes(db.Model,BaseMixin,AuditMixin):
+    nombre = db.Column(db.String(50), nullable=False)
+    estatus = db.Column(db.String(255),default="Activo")
+
+class Reportes(db.Model,BaseMixin,AuditMixin):
+    nombre = db.Column(db.String(50), nullable=False)
+    id_categoria_de_reporte = db.Column(db.UUID,db.ForeignKey('categorias_de_reportes.id'),nullable=False)
+    descripcion = db.Column(db.String(255), nullable=True)
+    ruta_sql = db.Column(db.String(255), nullable=False)
+    estatus = db.Column(db.String(255),default="Activo")
+
+    categoria = db.relationship("CategoriasDeReportes", backref="reportes", lazy=True)

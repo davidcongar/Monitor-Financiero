@@ -13,22 +13,30 @@ from python.services.helper_functions import *
 report_queries_bp = Blueprint("report_queries", __name__, url_prefix="/report_queries")
 
 
+def get_query_variables_values(base_query):
+    variables_query = extract_param_names(base_query)
+    variables_request = {k: v for k, v in request.values.items() if k in variables_query and v != ""}
+    query_variables={
+        "id_usuario":session["id_usuario"],
+        "id_usuario_conectado": session["id_usuario_conectado"],
+    }
+    for key in query_variables:
+        if key in variables_query and query_variables[key] is not None:
+            variables_request[key] = query_variables[key]
+    return variables_request
+
 @report_queries_bp.route("/<string:sql_name>", methods=["GET"])
 @login_required
 def report_queries(sql_name):
-    table_name=sql_name
     path = './static/sql/report_queries/'+sql_name+'.sql'
     base_query = open(path, "r", encoding="utf-8").read()
-    variables_query = extract_param_names(base_query)
-    variables_request = {k: v for k, v in request.values.items() if k in variables_query and v != ""}
-    if "id_usuario" in variables_query:
-        variables_request["id_usuario"] = session["id_usuario"]
+    variables_request=get_query_variables_values(base_query)
     data=db.session.execute(text(base_query),variables_request)
     columns =  list(data.keys())
     return render_template(
         "dynamic_table.html",
         columns=columns,
-        table_name=table_name,
+        table_name=sql_name,
         report=1
     )
 
@@ -36,15 +44,8 @@ def report_queries(sql_name):
 @login_required
 def data(sql_name):
     path = './static/sql/report_queries/'+sql_name+'.sql'
-    with open(path, "r", encoding="utf-8") as f:
-        base_query = f.read().strip()
-
-    # build params from request + session
-    variables_query = extract_param_names(base_query)
-    variables_request = {k: v for k, v in request.values.items() if k in variables_query and v != ""}
-    if "id_usuario" in variables_query:
-        variables_request["id_usuario"] = session["id_usuario"]
-
+    base_query = open(path, "r", encoding="utf-8").read()
+    variables_request=get_query_variables_values(base_query)
     # --- dynamic table inputs ---
     view      = request.args.get("view", 50, type=int)
     search    = request.args.get("search", "", type=str)

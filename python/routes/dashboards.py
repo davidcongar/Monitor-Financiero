@@ -55,19 +55,15 @@ def gastos_compartidos():
         year=request.form['year']
         fecha=year+'-'+month+'-01'
         fecha=datetime.strptime(fecha, "%Y-%m-%d")
-        user_expenses = db.session.execute(text(open('./static/sql/dashboard_queries/compartido_gastos.sql','r',encoding='utf-8').read()), {'id_usuario': session['id_usuario'],'fecha':fecha})
-        shared_user_expenses = db.session.execute(text(open('./static/sql/dashboard_queries/compartido_gastos.sql','r',encoding='utf-8').read()), {'id_usuario': usuario.id_usuario_conectado,'fecha':fecha})
         monthly_shared_expenses = db.session.execute(text(open('./static/sql/dashboard_queries/compartido_gastos_resumen_mensual.sql','r',encoding='utf-8').read()), {'id_usuario': session['id_usuario'],'id_usuario_conectado': usuario.id_usuario_conectado,'fecha':fecha})
         remaining_shared_expenses = db.session.execute(text(open('./static/sql/dashboard_queries/compartido_gasto_restante.sql','r',encoding='utf-8').read()), {'id_usuario': session['id_usuario'],'id_usuario_conectado': usuario.id_usuario_conectado,'fecha':fecha})
-        return render_template('main/dashboards/gastos_compartidos.html', **data,shared_user=usuario.id_usuario_conectado,user_expenses=user_expenses,shared_user_expenses=shared_user_expenses
-                               ,monthly_shared_expenses=monthly_shared_expenses,month=month,year=year,remaining_shared_expenses=remaining_shared_expenses,
+        return render_template('main/dashboards/gastos_compartidos.html', **data,shared_user=usuario.id_usuario_conectado,
+                               monthly_shared_expenses=monthly_shared_expenses,month=month,year=year,remaining_shared_expenses=remaining_shared_expenses,
                                yearly_expenses=yearly_expenses,monthly_expenses=monthly_expenses,nombre_usuario_compartido=nombre_usuario_compartido.nombre)
     else:
-        user_expenses = db.session.execute(text(open('./static/sql/dashboard_queries/compartido_gastos.sql','r',encoding='utf-8').read()), {'id_usuario': session['id_usuario'],'fecha':datetime.now()})
-        shared_user_expenses = db.session.execute(text(open('./static/sql/dashboard_queries/compartido_gastos.sql','r',encoding='utf-8').read()), {'id_usuario': usuario.id_usuario_conectado,'fecha':datetime.now()})
         monthly_shared_expenses = db.session.execute(text(open('./static/sql/dashboard_queries/compartido_gastos_resumen_mensual.sql','r',encoding='utf-8').read()), {'id_usuario': session['id_usuario'],'id_usuario_conectado': usuario.id_usuario_conectado,'fecha':datetime.now()})
         remaining_shared_expenses = db.session.execute(text(open('./static/sql/dashboard_queries/compartido_gasto_restante.sql','r',encoding='utf-8').read()), {'id_usuario': session['id_usuario'],'id_usuario_conectado': usuario.id_usuario_conectado,'fecha':datetime.now()})
-        return render_template('main/dashboards/gastos_compartidos.html', **data,user_expenses=user_expenses,shared_user_expenses=shared_user_expenses,
+        return render_template('main/dashboards/gastos_compartidos.html', **data,
                                monthly_shared_expenses=monthly_shared_expenses,remaining_shared_expenses=remaining_shared_expenses,
                                yearly_expenses=yearly_expenses,monthly_expenses=monthly_expenses,years=years,categories=categorias,nombre_usuario_compartido=nombre_usuario_compartido.nombre)
 

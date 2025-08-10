@@ -6,6 +6,7 @@ from flask import  jsonify
 def get_joins():
     joins = {
         "id_usuario": (Usuarios, Usuarios.id, Usuarios.nombre),
+        "id_categoria_de_reporte":(CategoriasDeReportes, CategoriasDeReportes.id, CategoriasDeReportes.nombre),
         "id_usuario_conectado": (Usuarios, Usuarios.id, Usuarios.nombre),
         "id_cuenta": (Cuentas, Cuentas.id, Cuentas.nombre),
         "id_cuenta_salida": (Cuentas, Cuentas.id, Cuentas.nombre),
@@ -24,6 +25,7 @@ def get_tabs():
 
 def get_foreign_options():
     foreign_options = {
+        "id_categoria_de_reporte":CategoriasDeReportes.query.filter_by(estatus="Activo",id_usuario=session['id_usuario']),
         "id_cuenta": Cuentas.query.filter_by(estatus="Activo",id_usuario=session['id_usuario']),
         "id_cuenta_salida": Cuentas.query.filter_by(estatus="Activo",id_usuario=session['id_usuario']),
         "id_cuenta_entrada": Cuentas.query.filter_by(estatus="Activo",id_usuario=session['id_usuario']),
@@ -49,6 +51,8 @@ def get_multiple_choice_data():
 def get_table_columns():
     columns = {
         "usuarios":['id_visualizacion','nombre','correo_electronico','id_usuario_conectado','estatus'],
+        "categorias_de_reportes":['id_visualizacion','nombre','estatus'],
+        "reportes":['id_visualizacion','id_categoria_de_reporte','nombre','descripcion'],
         "cuentas":['id_visualizacion','nombre','nombre_apple_pay','tipo','monto_credito','estatus'],
         "categorias_de_gastos":['id_visualizacion','nombre','estatus'],
         "categorias_de_ingresos":['id_visualizacion','nombre','estatus'],
@@ -71,6 +75,8 @@ def get_table_buttons():
 def get_columns_order():
     columns = {
         "usuarios":['id','id_visualizacion','nombre','correo_electronico','id_usuario_conectado','contrasena_api','estatus','fecha_de_creacion'],
+        "categorias_de_reportes":['id','id_visualizacion','nombre','estatus'],
+        "reportes":['id_visualizacion','id_categoria_de_reporte','nombre','descripcion','ruta_sql'],
         "cuentas":['id','id_visualizacion','nombre','nombre_apple_pay','tipo','monto_credito','estatus','fecha_de_creacion','fecha_de_actualizacion'],
         "categorias_de_gastos":['id','id_visualizacion','nombre','estatus','fecha_de_creacion','fecha_de_actualizacion'],
         "categorias_de_ingresos":['id','id_visualizacion','nombre','estatus','fecha_de_creacion','fecha_de_actualizacion'],
@@ -90,28 +96,25 @@ def get_estatus_options():
     return estatus_options
 
 def get_breadcrumbs(table_name):
-    if table_name in ('cuentas','categorias_de_gastos','categorias_de_ingresos','negocios_apple_pay'):
-        active_menu='catalogos'
-        modulo="Catálogos"
-    elif table_name in ('gastos','gastos_recurrentes'):
-        active_menu='gastos'
-        modulo="Gastos"
-    elif table_name in ('ingresos','ingresos_recurrentes'):
-        active_menu='ingresos'
-        modulo="Ingresos"
-    elif table_name in ('transferencias'):
-        active_menu='transferencias'
-        modulo="Transferencias"
-    elif table_name in ('usuarios'):
-        active_menu='permisos'
-        modulo="Permisos"
-    elif table_name in ('logs_auditoria'):
-        active_menu='auditoria'
-        modulo="Auditoría"
-    else:
-        active_menu='bases_de_datos'
-        modulo="Bases de datos"
-    return modulo,active_menu
+    # [modulo,active_menu]
+    breadcrumbs={
+        "usuarios":['Permisos','permisos'],
+        "roles":['Permisos','permisos'],
+        "logs_auditoria":['Auditoría','auditoria'],
+        "cuentas":['Cátalogos','catalogos'],
+        "categorias_de_gastos":['Cátalogos','catalogos'],
+        "categorias_de_ingresos":['Cátalogos','catalogos'],
+        "negocios_apple_pay":['Cátalogos','catalogos'],
+        "gastos":['Gastos','gastos'],
+        "gastos_recurrentes":['Gastos','gastos'],
+        "ingresos":['Ingresos','ingresos'],
+        "ingresos_recurrentes":['Ingresos','ingresos'],
+        "transferencias":['Transferencias','transferencias'],
+        "reportes":['Reportes','reportes']
+    }
+    breadcrumbs=breadcrumbs.get(table_name,{'Bases de datos','bases_de_datos'})
+    return breadcrumbs[0],breadcrumbs[1]
+
 
 def get_ignored_columns(table_name):
     columnas_generales = {'fecha_de_creacion', 'estatus', 'id_usuario', 'id_visualizacion', 'fecha_de_actualizacion','contrasena','contrasena_api'}
