@@ -68,7 +68,7 @@ def get_table_columns():
 
 def get_table_buttons():
     buttons = {
-        "ejemplo":0,
+        "reportes":1,
     }
     return buttons
 

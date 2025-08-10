@@ -12,13 +12,13 @@ from python.services.helper_functions import *
 
 report_queries_bp = Blueprint("report_queries", __name__, url_prefix="/report_queries")
 
-
 def get_query_variables_values(base_query):
     variables_query = extract_param_names(base_query)
     variables_request = {k: v for k, v in request.values.items() if k in variables_query and v != ""}
+    usuario=Usuarios.query.get(session["id_usuario"])
     query_variables={
-        "id_usuario":session["id_usuario"],
-        "id_usuario_conectado": session["id_usuario_conectado"],
+        "id_usuario":usuario.id,
+        "id_usuario_conectado": usuario.id_usuario_conectado,
     }
     for key in query_variables:
         if key in variables_query and query_variables[key] is not None:
@@ -28,6 +28,10 @@ def get_query_variables_values(base_query):
 @report_queries_bp.route("/<string:sql_name>", methods=["GET"])
 @login_required
 def report_queries(sql_name):
+    context = {
+            "activeMenu": 'reportes', 
+            "breadcrumbs": [{"name":"Reportes","url":""}]
+        }
     path = './static/sql/report_queries/'+sql_name+'.sql'
     base_query = open(path, "r", encoding="utf-8").read()
     variables_request=get_query_variables_values(base_query)
@@ -37,7 +41,8 @@ def report_queries(sql_name):
         "dynamic_table.html",
         columns=columns,
         table_name=sql_name,
-        report=1
+        report=1,
+        **context,
     )
 
 @report_queries_bp.route("/<string:sql_name>/data", methods=["GET"])
