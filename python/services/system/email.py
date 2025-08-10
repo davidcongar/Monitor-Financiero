@@ -48,7 +48,7 @@ def forgot_password_email(recipient_email,contrasena):
         send_html_email(
             subject="Nueva contraseña - Monitor Financiero",
             recipient_email=recipient_email,
-            template="partials/email_template.html",
+            template="partials/system/email_template.html",
             body_content="Se acaba de crear una nueva contraseña para tu correo electrónico",
             details_list=[
                 f"Nueva contraseña: {contrasena}"
@@ -63,7 +63,7 @@ def new_user_email(recipient_email,contrasena):
         send_html_email(
             subject="Monitor Financiero",
             recipient_email=recipient_email,
-            template="partials/email_template.html",
+            template="partials/system/email_template.html",
             body_content="Se acaba de crear tu usuario para el Monitor Financiero.",
             details_list=[
                 "URL Plataforma: monitorfinanciero.snappsolutions.com",
@@ -80,7 +80,7 @@ def apple_pay_email(recipient_email,error_mensaje,error_codigo):
         send_html_email(
             subject="Monitor Financiero - Error Apple Pay",
             recipient_email=recipient_email,
-            template="partials/email_template.html",
+            template="partials/system/email_template.html",
             body_content="Hubo un error en la conexión con Apple Pay. Favor de revisar",
             details_list=[
                 f"Error mensaje: {error_mensaje}",

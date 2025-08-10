@@ -1,6 +1,6 @@
 # python/tests/test_config.py
 
-from python.services.email import send_html_email
+from python.services.system.email import send_html_email
 
 # variables de configuración
 SYSTEM_NAME = "Monitor Financiero"
@@ -50,7 +50,7 @@ def send_test_failure_email(errors):
     """Envía un correo con el resumen de los tests fallidos."""
     try:
         subject = f"⚠️ {SYSTEM_NAME}: fallos en pruebas automatizadas"
-        template = "partials/test_failure_email.html"
+        template = "partials/system/test_failure_email.html"
 
         body_content = (
             f"Se encontraron fallos en las pruebas automatizadas del sistema {SYSTEM_NAME}. "

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-{% include "./partials/head.html" %}
+{% include "./partials/system/head.html" %}
 
 <body x-data="main" class="font-inter text-base antialiased font-medium relative vertical"
     :class="[ $store.app.sidebar ? 'toggle-sidebar' : '', $store.app.fullscreen ? 'full' : '',$store.app.mode]">
@@ -22,7 +22,7 @@
             <!-- Start Content Area -->
             <div class="main-content flex-1">
                 <!-- Start Topbar -->
-                {% include "./partials/header.html" %}
+                {% include "./partials/system/header.html" %}
                 <!-- End Topbar -->
 
                 <!-- Start Content -->
@@ -35,7 +35,7 @@
                     <!-- End All Card -->
 
                     <!-- Start Footer -->
-                    {% include "./partials/footer.html" %}
+                    {% include "./partials/system/footer.html" %}
                     <!-- End Footer -->
 
                 </div>
@@ -47,7 +47,7 @@
     <!-- End Layout -->
 
     <!-- All javascirpt -->
-    {% include './partials/scripts.html' %}
+    {% include './partials/system/scripts.html' %}
 </body>
 
 </html>

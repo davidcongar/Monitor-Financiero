@@ -6,15 +6,15 @@ from flask import Blueprint, flash, jsonify, redirect, render_template, request,
 
 from python.models import db
 from python.models.modelos import *
-from python.services.helper_functions import *
+from python.services.system.helper_functions import *
 from python.services.form_workflows.edit_on_success import *
 from python.services.form_workflows.on_success import *
-from python.services.authentication import *
+from python.services.system.authentication import *
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.orm.dynamic import AppenderQuery
 from sqlalchemy.orm import aliased
 from python.services.dynamic_routes_functions import *
-from python.services.boto3_s3 import S3Service
+from python.services.system.boto3_s3 import S3Service
 s3_service = S3Service()
 
 # Crear un Blueprint para rutas dinámicas basado en el nombre de la tabla
@@ -60,7 +60,7 @@ def table_view(table_name):
     else:
         data_tabs={}
     return render_template(
-        "dynamic_table.html",
+        "system/dynamic_table.html",
         buttons_modal_exits=buttons_modal_exits,
         tabs_exist=tabs_exist,
         columns=columns,

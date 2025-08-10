@@ -1,7 +1,7 @@
-{% extends './partials/layout1.html' %}
-{% include 'partials/flash_alerts.html' %}
+{% extends './partials/system/layout1.html' %}
+{% include 'partials/system/flash_alerts.html' %}
 {% block content %}
-{% include 'partials/alerts.html' %}
+{% include 'partials/system/alerts.html' %}
 <div id="main" class="flex flex-col gap-5 min-h-[calc(100vh-188px)] sm:min-h-[calc(100vh-204px)]">
     <div class="grid grid-cols-1 xl:grid-cols-1 gap-5">
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
@@ -144,7 +144,7 @@
                 <div class="mb-[30px] flex items-center flex-wrap">
                     <h2 class="flex-1 font-semibold">Ingreso mensual</h2>
                     <div>
-                        <select id="select_ingreso_mensual_categoria" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="generar_grafica('#ingreso_mensual','line','year_mes','importe',`/dashboard_queries/manual/ingreso_mensual?year=${select_ingreso_mensual_year.value}&category=${select_ingreso_mensual_categoria.value}`,{legend:{show:false},valueType: 'currency'})">
+                        <select id="select_ingreso_mensual_categoria" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="generar_grafica('#ingreso_mensual','line','year_mes','importe',`/dashboard/manual/ingreso_mensual?year=${select_ingreso_mensual_year.value}&category=${select_ingreso_mensual_categoria.value}`,{legend:{show:false},valueType: 'currency'})">
                             <option value="todas">Todas</option>
                             {% for record in categorias %}
                                 <option value="{{ record.id }}">{{ record.nombre }}</option>
@@ -152,7 +152,7 @@
                         </select>
                     </div>
                     <div style="margin-left:10px">
-                        <select id="select_ingreso_mensual_year" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="generar_grafica('#ingreso_mensual','line','year_mes','importe',`/dashboard_queries/manual/ingreso_mensual?year=${select_ingreso_mensual_year.value}&category=${select_ingreso_mensual_categoria.value}`,{legend:{show:false},valueType: 'currency'})">
+                        <select id="select_ingreso_mensual_year" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="generar_grafica('#ingreso_mensual','line','year_mes','importe',`/dashboard/manual/ingreso_mensual?year=${select_ingreso_mensual_year.value}&category=${select_ingreso_mensual_categoria.value}`,{legend:{show:false},valueType: 'currency'})">
                             <option value="historico">Histórico</option>
                             {% for record in years %}
                                 <option value="{{ record.year }}">{{ record.year }}</option>
@@ -166,8 +166,8 @@
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script>
-<script src="/static/js/apex-ecom_copy.js"></script>
-<script src="/static/js/funciones_generales.js"></script>
+<script src="/static/js/system/apex-ecom_copy.js"></script>
+<script src="/static/js/system/funciones_generales.js"></script>
 <script src="/static/js/charts/general.js"></script>
 <script src="/static/js/charts/waterfall.js"></script>
 <script>
@@ -178,6 +178,6 @@
         select_ingreso_anual_categoria_year.value=year
         generar_grafica('#ingreso_mensual_categoria', 'bar','categoria','importe','/dashboard_queries/ingreso_mensual_categoria?year='+year+'&month='+month,options={legend:{show:false},valueType: 'currency'})
         generar_grafica('#ingreso_anual_categoria', 'bar','categoria','importe','/dashboard_queries/ingreso_anual_categoria?year='+year,options={legend:{show:false},valueType: 'currency'})
-        generar_grafica('#ingreso_mensual', 'line','year_mes','importe','/dashboard_queries/manual/ingreso_mensual?year=historico&category=todas',options={legend:{show:false},valueType: 'currency'})
+        generar_grafica('#ingreso_mensual', 'line','year_mes','importe','/dashboard/manual/ingreso_mensual?year=historico&category=todas',options={legend:{show:false},valueType: 'currency'})
 </script>
 {% endblock content %}

@@ -15,7 +15,7 @@ from svglib.svglib import svg2rlg
 import os
 from python.models import db
 from static.Tablas.tablas import tabla_uno, tabla_dos
-from python.services.helper_functions import *
+from python.services.system.helper_functions import *
 from flask import request
 
 class ExcelService:

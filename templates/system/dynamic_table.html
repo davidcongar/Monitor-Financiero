@@ -1,10 +1,10 @@
 <!-- templates/dynamic_table.html -->
 
-{% extends './partials/layout1.html' %}
-{% include "./partials/flash_alerts.html" %}
+{% extends './partials/system/layout1.html' %}
+{% include "./partials/system/flash_alerts.html" %}
 
 {% block content %}
-{% include "./partials/alerts.html" %}
+{% include "./partials/system/alerts.html" %}
 <!-- Breadcrumb -->
 {% include 'partials/table/breadcrumbs.html' %}
 <!-- Elemento oculto para pasar data al JS: nombre de tabla y columnas -->
@@ -60,15 +60,15 @@
         {% include 'partials/table/modals/dynamic_modal.html' %}
     </div>
 </div>
-{% include "./partials/loader.html" %}
+{% include "./partials/system/loader.html" %}
 <!-- Incluir archivos JS centralizados -->
-<script src="/static/js/data-search.js"></script>
-<script src="/static/js/data_table.js"></script>
-<script src="/static/js/loader.js"></script>
-<script src="/static/js/dynamic_table_init.js"></script>
-<script src="/static/js/format_functions.js"></script>
-<script src="/static/js/generate_files.js"></script>
-<script src="/static/js/download_file.js"></script>
+<script src="/static/js/system/data-search.js"></script>
+<script src="/static/js/system/data_table.js"></script>
+<script src="/static/js/system/loader.js"></script>
+<script src="/static/js/system/dynamic_table_init.js"></script>
+<script src="/static/js/system/format_functions.js"></script>
+<script src="/static/js/system/generate_files.js"></script>
+<script src="/static/js/system/download_file.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>  

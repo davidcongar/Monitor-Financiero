@@ -3,8 +3,8 @@
 from flask import Blueprint, render_template,jsonify,request,redirect
 from sqlalchemy import or_,and_,cast, String,func,text,extract
 from python.models.modelos import *
-from python.services.boto3_s3 import S3Service
-from python.services.authentication import *
+from python.services.system.boto3_s3 import S3Service
+from python.services.system.authentication import *
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 s3_service = S3Service()

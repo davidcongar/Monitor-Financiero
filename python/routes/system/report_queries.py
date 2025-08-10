@@ -4,11 +4,11 @@ from flask import Blueprint, render_template, jsonify, request, Response, sessio
 from sqlalchemy import or_, and_, cast, String, func, text
 from python.models.modelos import *
 
-from python.services.authentication import *
+from python.services.system.authentication import *
 
 import io
 from PIL import Image, ImageDraw, ImageFont
-from python.services.helper_functions import *
+from python.services.system.helper_functions import *
 
 report_queries_bp = Blueprint("report_queries", __name__, url_prefix="/report_queries")
 
@@ -38,7 +38,7 @@ def report_queries(sql_name):
     data=db.session.execute(text(base_query),variables_request)
     columns =  list(data.keys())
     return render_template(
-        "dynamic_table.html",
+        "system/dynamic_table.html",
         columns=columns,
         table_name=sql_name,
         report=1,

@@ -5,7 +5,7 @@ from flask import Blueprint, flash, redirect, render_template, request, session,
 
 from python.models import db
 from python.models.modelos import *
-from python.services.email import *
+from python.services.system.email import *
 from functools import wraps 
 import secrets
 import string

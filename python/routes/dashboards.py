@@ -3,7 +3,7 @@
 from flask import Blueprint, render_template,jsonify,request
 from sqlalchemy import or_,and_,cast, String,func,text,extract
 from python.models.modelos import *
-from python.services.authentication import *
+from python.services.system.authentication import *
 from datetime import datetime
 
 dashboards_bp = Blueprint("dashboards", __name__,url_prefix="/dashboards")
@@ -67,3 +67,46 @@ def gastos_compartidos():
                                monthly_shared_expenses=monthly_shared_expenses,remaining_shared_expenses=remaining_shared_expenses,
                                yearly_expenses=yearly_expenses,monthly_expenses=monthly_expenses,years=years,categories=categorias,nombre_usuario_compartido=nombre_usuario_compartido.nombre)
 
+@dashboards_bp.route('/manual/gasto_mensual', methods=['GET'])
+@login_required
+def expenses_by_month():
+    year = request.args.get("year")
+    category=request.args.get("category")
+    params = {}
+    params['id_usuario'] = session['id_usuario']
+    base_query=open('./static/sql/dashboard_queries/gasto_mensual.sql','r',encoding='utf-8').read()
+    if year!='historico':
+        base_query += " and extract(year from fecha)=:year"
+        params['year'] = year
+    if category!='todas':
+        base_query += " and id_categoria_de_gasto=:category"
+        params['category'] = category
+    base_query += """
+    GROUP BY EXTRACT(month FROM fecha), EXTRACT(YEAR FROM fecha)
+    ORDER BY EXTRACT(YEAR FROM fecha), EXTRACT(month FROM fecha)
+    """
+    data=db.session.execute(text(base_query),params).fetchall()
+    data = [dict(row._mapping) for row in data]
+    return jsonify(data)
+
+@dashboards_bp.route('/manual/ingreso_mensual', methods=['POST','GET'])
+@login_required
+def ingreso_mensual():
+    year = request.args.get("year")
+    category=request.args.get("category")
+    params = {}
+    params['id_usuario'] = session['id_usuario']
+    base_query=open('./static/sql/dashboard_queries/ingreso_mensual.sql','r',encoding='utf-8').read()
+    if year!='historico':
+        base_query += " and extract(year from fecha)=:year"
+        params['year'] = year
+    if category!='todas':
+        base_query += " and id_categoria_de_ingreso=:category"
+        params['category'] = category
+    base_query += """
+    GROUP BY EXTRACT(month FROM fecha), EXTRACT(YEAR FROM fecha)
+    ORDER BY EXTRACT(YEAR FROM fecha), EXTRACT(month FROM fecha)
+    """
+    data=db.session.execute(text(base_query),params).fetchall()
+    data = [dict(row._mapping) for row in data]
+    return jsonify(data)

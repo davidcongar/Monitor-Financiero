@@ -1,6 +1,6 @@
 from python.models.modelos import *
 from sqlalchemy import func
-from python.services.helper_functions import *
+from python.services.system.helper_functions import *
 from flask import  jsonify
 
 def get_joins():

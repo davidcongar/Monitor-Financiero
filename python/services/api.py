@@ -3,7 +3,7 @@
 from flask import Blueprint, render_template, jsonify, request, Response, session
 from sqlalchemy import or_, and_, cast, String, func, text
 from python.models.modelos import *
-from python.services.authentication import *
+from python.services.system.authentication import *
 
 import io
 from PIL import Image, ImageDraw, ImageFont

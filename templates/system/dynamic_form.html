@@ -1,8 +1,8 @@
-{% extends './partials/layout1.html' %}
+{% extends './partials/system/layout1.html' %}
 <!-- templates/dynamic_form.html -->
-{% include 'partials/flash_alerts.html' %}
+{% include 'partials/system/flash_alerts.html' %}
 {% block content %}
-{% include './partials/alerts.html' %}
+{% include './partials/system/alerts.html' %}
 <!-- Breadcrumb -->
 {% include 'partials/table/breadcrumbs.html' %}
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -193,7 +193,7 @@
         document.getElementById("file-name").textContent = "No se ha seleccionado ningún archivo";
     });
 </script>
-<script src="/static/js/archivos_multiples.js"></script>
+<script src="/static/js/system/archivos_multiples.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const params = new URLSearchParams(window.location.search);

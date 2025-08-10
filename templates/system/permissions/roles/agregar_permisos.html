@@ -1,15 +1,15 @@
-{% extends 'partials/layout1.html' %}
+{% extends 'partials/system/layout1.html' %}
 
 {% block content %}
 
-{% include "partials/flash_alerts.html" %}
+{% include "partials/system/flash_alerts.html" %}
 
 <!-- Breadcrumb -->
 {% include 'partials/table/breadcrumbs.html' %}
 <div class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg flex items-center justify-between">
     <div>
         <h1 class="font-semibold">Rol: {{rol.nombre}}</h1>
-        <h1 class="font-semibold">Número de usuarios: {{cantidad_usuarios}}</h1>
+        <h1 class="font-semibold">Número de permisos: {{cantidad_permisos}}</h1>
     </div>
     <div class="flex gap-2">
         <form method="GET" action="{{ url_for('dynamic.table_view', table_name='roles') }}">
@@ -23,18 +23,18 @@
 
 <div class="grid grid-cols-2 gap-5"> <!-- Cambia grid-cols-1 a grid-cols-2 -->
     <div>
-        {% include 'mainpermissions/roles/usuarios_disponibles.html' %}
+        {% include 'mainpermissions/rolespermissions_disponibles.html' %}
     </div>
         <!-- Contenido -->
     <div>
-        {% include 'mainpermissions/roles/usuarios_asignados.html' %}
+        {% include 'mainpermissions/rolespermissions_asignados.html' %}
     </div>
 </div>
-<script src="/static/js/data-search.js"></script>
-<script src="/static/js/data_table.js"></script>
-<script src="/static/js/loader.js"></script>
-<script src="/static/js/dynamic_table_init.js"></script>
-<script src="/static/js/format_functions.js"></script>
-{% include "partials/loader.html" %}
+<script src="/static/js/system/data-search.js"></script>
+<script src="/static/js/system/data_table.js"></script>
+<script src="/static/js/system/loader.js"></script>
+<script src="/static/js/system/dynamic_table_init.js"></script>
+<script src="/static/js/system/format_functions.js"></script>
+{% include "partials/system/loader.html" %}
 
 {% endblock content %}

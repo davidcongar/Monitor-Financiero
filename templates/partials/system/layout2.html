@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-{% include "./partials/head.html" %}
+{% include "./partials/system/head.html" %}
 
 <body x-data="main" class="font-inter text-base antialiased font-medium relative vertical"
     :class="[ $store.app.sidebar ? 'toggle-sidebar' : '', $store.app.fullscreen ? 'full' : '',$store.app.mode]">
@@ -17,7 +17,7 @@
     <!-- End Layout -->
 
     <!-- All javascirpt -->
-    {% include './partials/scripts.html' %}
+    {% include './partials/system/scripts.html' %}
 
     <script>
         function timer(expiry) {

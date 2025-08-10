@@ -9,9 +9,9 @@ from flask_migrate import Migrate
 from sqlalchemy import event, inspect
 
 from flask_session import Session
-from python.services.audit import *
+from python.services.system.audit import *
 from python.models.modelos import db
-from python.services.authentication import *
+from python.services.system.authentication import *
 
 # Cargar variables de entorno
 load_dotenv()
@@ -84,11 +84,11 @@ from python.routes.system.dynamic_routes import dynamic_bp
 from python.routes.system.errors import errors_bp
 from python.routes.system.files import files_bp
 from python.routes.system.home import home_bp
-from python.services.authentication import auth_bp
+from python.services.system.authentication import auth_bp
 from python.services.api import api_bp
-from python.routes.dashboard_queries import dashboard_queries_bp
+from python.routes.system.dashboard_queries import dashboard_queries_bp
 from python.routes.dashboards import dashboards_bp
-from python.routes.report_queries import report_queries_bp
+from python.routes.system.report_queries import report_queries_bp
 
 app.register_blueprint(errors_bp)
 app.register_blueprint(auth_bp)
@@ -100,7 +100,7 @@ app.register_blueprint(dashboard_queries_bp)
 app.register_blueprint(dashboards_bp)
 app.register_blueprint(report_queries_bp)
 
-from python.services.template_formats import *
+from python.services.system.template_formats import *
 
 # Almacenar los nombres de las tablas en caché
 TABLES_CACHE = {}
