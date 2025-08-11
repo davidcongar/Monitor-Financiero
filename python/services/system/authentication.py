@@ -70,11 +70,11 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/authentication")
 
 @auth_bp.route("/login")
 def login():
-    return render_template("authentication/login.html")
+    return render_template("system/authentication/login.html")
 
 @auth_bp.route("/signin")
 def signin():
-    return render_template("authentication/signin.html")
+    return render_template("system/authentication/signin.html")
 
 @auth_bp.route('/login_submit', methods=['POST'])
 def login_submit():
@@ -97,7 +97,7 @@ def login_submit():
 
 @auth_bp.route("/forgotpassword")
 def forgot_password():
-    return render_template("authentication/forgotpassword.html")
+    return render_template("system/authentication/forgotpassword.html")
 
 @auth_bp.route('/forgotpassword_submit', methods=['POST'])
 def forgotpassword_submit():
