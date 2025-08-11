@@ -136,7 +136,7 @@ def form(table_name):
     }
 
     return render_template(
-        "dynamic_form.html",
+        "system/dynamic_form.html",
         columns=columns,
         required_fields=required_fields,
         table_name=table_name,
