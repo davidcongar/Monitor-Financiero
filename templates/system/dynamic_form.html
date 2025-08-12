@@ -226,6 +226,39 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
+<script>
+    function safeEvalExpression(expr) {
+        // allow digits, spaces, decimal points, + - * / and parentheses
+        const cleaned = expr.replace(/,/g, ".").trim();
+        if (!/^[\d\s.+\-*/()]+$/.test(cleaned)) throw new Error("invalid");
+
+        // Use Function instead of eval and only return the arithmetic
+        // This still executes JS, but far more constrained; we validated input above.
+        const fn = new Function(`"use strict"; return (${cleaned});`);
+        const result = fn();
+        if (!Number.isFinite(result)) throw new Error("not finite");
+        return result;
+        }
+
+        function processInput(event) {
+        const input = event.target;
+        const value = input.value;
+
+        if (/[+\-*/]/.test(value)) { // simpler operator check
+            try {
+            const result = safeEvalExpression(value);
+            input.value = result;
+            } catch {
+            input.value = "Error";
+            }
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+    const el = document.getElementById("importe");
+    if (el) el.addEventListener("focusout", processInput); // or "change"/"blur"/"input"
+    });
+</script>
 
 
 {% if javascript %}
