@@ -102,7 +102,7 @@ async function get_record(form, recordId) {
                     value = formatNumber(value);
                 }
                 const tr = document.createElement('tr');
-                if(String(value).includes('/')){
+                if(String(value).includes('/dynamic')){
                     const modal_content_relationship = document.getElementById('modal_content_relationship');
                     modal_content_relationship.innerHTML = '<tbody></tbody>';
                     const tbody_modal_content_relationship = modal_content_relationship.querySelector("tbody");
