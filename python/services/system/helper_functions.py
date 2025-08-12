@@ -91,21 +91,17 @@ def hour_format(value):
             new_value=value
     return new_value
 
-
-def search_table(query, model, search, joins):
+def search_table(query, model, search, related_name_columns):
     filters = []
     extra_filters = []
 
-    # Detectar si es número (int o float)
+    # try to parse number
     try:
-        if '.' in search:
-            search_number = float(search)
-        else:
-            search_number = int(search)
+        search_number = float(search) if "." in search else int(search)
     except ValueError:
         search_number = None
 
-    # Filtros sobre columnas del modelo principal
+    # filters on BASE model columns
     for col in model.__table__.columns:
         col_attr = getattr(model, col.name)
         if isinstance(col.type, (String, Text)):
@@ -113,14 +109,17 @@ def search_table(query, model, search, joins):
         elif search_number is not None and isinstance(col.type, (Integer, Float, Numeric)):
             filters.append(col_attr == search_number)
 
-    # Filtros sobre columnas relacionadas (joins)
-    for _, (_, _, name_column) in joins.items():
-        if isinstance(name_column.type, (String, Text)):
-            extra_filters.append(name_column.ilike(f"%{search}%"))
-        elif search_number is not None and isinstance(name_column.type, (Integer, Float, Numeric)):
-            extra_filters.append(name_column == search_number)
+    # filters on RELATED (ALIASED) columns
+    for name_col in related_name_columns:
+        if isinstance(name_col.type, (String, Text)):
+            extra_filters.append(name_col.ilike(f"%{search}%"))
+        elif search_number is not None and isinstance(name_col.type, (Integer, Float, Numeric)):
+            extra_filters.append(name_col == search_number)
 
-    return query.filter(or_(*(filters + extra_filters)))
+    if filters or extra_filters:
+        query = query.filter(or_(*(filters + extra_filters)))
+
+    return query
 
 def get_id_visualizacion(table_name):
     modelo = get_model_by_name(table_name)

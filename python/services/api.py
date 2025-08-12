@@ -17,7 +17,7 @@ def api_login(json_data):
     contrasena = json_data['contrasena']
     user = Usuarios.query.filter(Usuarios.id==id_usuario).first()
     if user!=None:
-        if contrasena==user.contrasena_api:
+        if contrasena==str(user.contrasena_api):
             data={'message':'Credenciales validas'}
         else:
             data={'message':'Credenciales no validas'}

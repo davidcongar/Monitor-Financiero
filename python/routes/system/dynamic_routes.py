@@ -229,34 +229,31 @@ def data(table_name):
 
     # Agregar joins condicionales
     joins = get_joins()
-    filtered_joins = {
-        field: val for field, val in joins.items() if field in model.__table__.columns
-    }
+    filtered_joins = {field: val for field, val in joins.items() if field in model.__table__.columns}
+
+    # We'll store ALIASED name columns here for search_table
+    aliased_name_columns = []
 
     for field, (table, id_column, name_column) in filtered_joins.items():
-        # Asegura que el campo exista en el modelo base
-        if field not in model.__table__.columns:
-            continue
-
-        # Crea un alias único por campo (soporta varias uniones al mismo modelo)
+        # alias per field
         alias = aliased(table, name=f"{table.__tablename__}__{field}")
 
-        # Re-vincula columnas al alias
+        # bind columns to alias
         alias_id_col = getattr(alias, id_column.key)
         alias_name_col = getattr(alias, name_column.key)
 
-        # Join explícito y ON explícito contra el modelo base
+        # join alias to BASE model using the FK on the base model column `field`
         query = (
             query.outerjoin(alias, alias_id_col == getattr(model, field))
                 .add_columns(alias_name_col.label(f"{field}_{name_column.key}"))
         )
+        # IMPORTANT: keep the ALIASED name column for searching later
+        aliased_name_columns.append(alias_name_col)
+
 
     # Aplicar búsqueda
     if search:
-        query = search_table(query, model, search, filtered_joins)
-
-    #if table_name=='archivos':
-        #query=query.filter(Archivos.id_registro==session['id_registro_tabla_origen'])
+        query = search_table(query, model, search, aliased_name_columns)
 
     status_field = get_tabs().get(table_name,'estatus')
 
