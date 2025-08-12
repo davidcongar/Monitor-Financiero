@@ -63,17 +63,16 @@ async function openActions(form, recordId,estatus) {
 
         updateButton.setAttribute('onclick', `redirectActions('/${form}/form?id=${recordId}')`);
         deleteButton.setAttribute('onclick', `redirectActions('/${form}/delete?id=${recordId}')`);
-        downloadButton.setAttribute('onclick', `redirectActions('/files/download_pdf?tabla=${form}&id=${recordId}')`);
+        downloadButton.setAttribute('onclick', `redirectActions('/files/download_pdf?table=${form}&id=${recordId}')`);
         const data = await get_record(form, recordId);
         const popupActions = document.getElementById('modal');
-        console.log("data =", data);
         Alpine.store('modalData').record = data;
         popupActions.classList.remove('hidden');
         hideLoader();
 }
 function closeActions() {
         const popupActions = document.getElementById('modal');
-        const container = document.getElementById('contenido_modal');
+        const container = document.getElementById('modal_content');
         container.innerHTML = ''; 
         popupActions.classList.add('hidden');
 }
@@ -88,9 +87,9 @@ async function get_record(form, recordId) {
             const record = data[0]; // first record
             const recordObj = Object.fromEntries(record);
 
-            const container = document.getElementById('contenido_modal');
-            container.innerHTML = '';
-
+            const modal_content = document.getElementById('modal_content');
+            modal_content.innerHTML = '<tbody></tbody>';
+            const tbody_modal_content = modal_content.querySelector("tbody");
             for (const [key, rawValue] of Object.entries(recordObj)) {
                 let value = rawValue;
                 if(key==='id_visualizacion'){
@@ -102,11 +101,28 @@ async function get_record(form, recordId) {
                 } else if (!isNaN(value)) {
                     value = formatNumber(value);
                 }
-
-                const p = document.createElement('p');
-                p.innerHTML = `<strong>${formatKey(key)}:</strong> <span id="modal${key}">${value}</span>`;
-                container.appendChild(p);
+                const tr = document.createElement('tr');
+                if(String(value).includes('/')){
+                    const modal_content_relationship = document.getElementById('modal_content_relationship');
+                    modal_content_relationship.innerHTML = '<tbody></tbody>';
+                    const tbody_modal_content_relationship = modal_content_relationship.querySelector("tbody");
+                    tr.innerHTML = `<td style="border-right: 1px solid #ccc; padding: 8px;">${formatKey(key)}</td>
+                    <td style="text-align: center;">
+                        <button type="submit"
+                            @click.stop="window.location.href='${value}'"
+                            class="btn border text-primary border-transparent rounded-md transition-all duration-300 hover:text-white hover:bg-primary bg-primary/10">
+                            Ver
+                        </button>
+                    </td>`;
+                    tbody_modal_content_relationship.appendChild(tr);
+                }else{
+                    tr.innerHTML = `<td style="border-right: 1px solid #ccc; padding: 8px; ">${formatKey(key)}</td><td style="overflow-wrap: break-word; word-break: keep-all; white-space: normal; overflow: hidden; text-overflow: ellipsis;">${value}</td>`;
+                    tbody_modal_content.appendChild(tr);
+                }
             }
+
+
+
             return recordObj;
         } catch (error) {
             console.error("Error fetching or processing data:", error);

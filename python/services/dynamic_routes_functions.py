@@ -153,3 +153,17 @@ def get_data_tabs(table_name):
         for estatus, count in results
     }
     return results
+
+def get_calendar_date_variable(table_name):
+    date_variable={
+        "ejemplo":"fecha_de_creacion"
+    }
+    date_variable=date_variable.get(table_name,'')
+    return date_variable
+
+def get_table_relationships(table_name):
+    relationships={
+        "ejemplo":['registros_relacionados_a_ejemplo'],
+    }
+    relationships=relationships.get(table_name,'')
+    return relationships

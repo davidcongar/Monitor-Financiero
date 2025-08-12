@@ -501,3 +501,5 @@ def record_data(table_name,id_registro):
     record = [record_to_ordered_list(record,table_name) for record in records]
 
     return jsonify(record)
+
+
