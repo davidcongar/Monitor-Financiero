@@ -94,14 +94,12 @@
                                         Selecciona una opción
                                     </option>
                                     {% for option in foreign_options[column] %}
+                                         <!-- Opciones de select dentro de foreign options que no sean de otras bases-->
                                         {% if column in ('estatus', 'tipo','gasto_compartido') %}
-                                            <option value="{{ option }}" {% if record and record[column] == option %}selected{% endif %}>
+                                            <option value="{{ option }}" {% if record and record[column] == option %}selected{% endif %} {% if default_variable_values[column] == option %}selected{% endif %}>
                                                 {{ option }}
                                             </option>
-                                        {% elif column in ('id_desarrollador','id_responsable') %}
-                                            <option value="{{ option.id }}" {% if record and record[column] == option.id %}selected{% endif %}>
-                                                {{ option.nombre_completo if option.nombre_completo else option.id }}
-                                            </option>
+                                         <!-- Opciones de select dentro de foreign options que sean de otras bases-->
                                         {% else %}
                                             <option value="{{ option.id }}" {% if record and record[column] == option.id %}selected{% endif %}>
                                                 {{ option.nombre if option.nombre else option.id }}
@@ -119,10 +117,10 @@
                             {% else %}
                                 {% if "fecha" in column %}
                                 <!-- Campo de fecha -->
-                                <input type="date" id="{{ column }}" name="{{ column }}" value="{{ record[column]|default('', true) if record else '' }}" class="form-input rounded-lg w-full" {% if column in required_fields %} required {% endif %}>
+                                <input type="date" id="{{ column }}" name="{{ column }}" value="{{record[column] if record else default_variable_values[column] }}" class="form-input rounded-lg w-full" {% if column in required_fields %} required {% endif %}>
                                 {% else %}
                                 <!-- Campo de texto normal -->
-                                <input type="text" id="{{ column }}" name="{{ column }}" value="{{ record[column]}}"class="form-input rounded-lg w-full" {% if column in required_fields %} required {% endif %}>
+                                <input type="text" id="{{ column }}" name="{{ column }}" value="{{record[column] if record else default_variable_values[column]}}"class="form-input rounded-lg w-full" {% if column in required_fields %} required {% endif %}>
                                 {% endif %}
                             {% endif %}
                         {% endif %}

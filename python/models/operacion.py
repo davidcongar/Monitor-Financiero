@@ -55,8 +55,8 @@ class GastosRecurrentes(db.Model,BaseMixin,AuditMixin):
     categoria = db.relationship("CategoriasDeGastos", backref="gastos_recurrentes", lazy=True)
 
 class Transferencias(db.Model,BaseMixin,AuditMixin):
-    id_cuenta_entrada = db.Column(db.UUID,db.ForeignKey('cuentas.id'),nullable=False)
     id_cuenta_salida = db.Column(db.UUID,db.ForeignKey('cuentas.id'),nullable=False)
+    id_cuenta_entrada = db.Column(db.UUID,db.ForeignKey('cuentas.id'),nullable=False)
     fecha = db.Column(db.Date,nullable=False)
     importe = db.Column(db.Float,nullable=False)
     notas = db.Column(db.String(500))

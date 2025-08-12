@@ -116,6 +116,7 @@ def form(table_name):
     modulo,active_menu=get_breadcrumbs(table_name)
 
     # edicion
+    default_variable_values={}
     record_id = request.args.get("id")
     if record_id!=None:
         record = model.query.get(record_id)
@@ -127,6 +128,7 @@ def form(table_name):
     else:
         accion="Registrar"
         record=None
+        default_variable_values=get_default_variable_values(table_name)
   
     context = {
         "activeMenu": active_menu,
@@ -134,6 +136,7 @@ def form(table_name):
         "foreign_options": foreign_options,
         "breadcrumbs": [{"name":modulo,"url":""},{"name":table_name.replace('_', ' ').capitalize(),"url":url_for("dynamic.table_view", table_name=table_name)},{"name":accion,"url":""}]
     }
+
 
     return render_template(
         "system/dynamic_form.html",
@@ -144,6 +147,7 @@ def form(table_name):
         multiple_choice_data=multiple_choice_data,
         action=accion,
         record=record,
+        default_variable_values=default_variable_values,
         **context,
     )
 

@@ -119,7 +119,7 @@ def get_breadcrumbs(table_name):
 def get_ignored_columns(table_name):
     columnas_generales = {'fecha_de_creacion', 'estatus', 'id_usuario', 'id_visualizacion', 'fecha_de_actualizacion','contrasena','contrasena_api'}
     columns = {
-        "gastos": {'id_negocio_apple_pay'} | columnas_generales,
+        "gastos": {'id_negocio_apple_pay','categoria_apple_pay'} | columnas_generales,
         "negocios_apple_pay": {'nombre'} | columnas_generales,
     }
     columns=columns.get(table_name)
@@ -167,3 +167,12 @@ def get_table_relationships(table_name):
     }
     relationships=relationships.get(table_name,'')
     return relationships
+
+def get_default_variable_values(table_name):
+    default_values = {
+        "gastos":{'pagos_mensuales':1,'fecha':date.today().strftime("%Y-%m-%d"),'gasto_compartido':'No'},
+        "ingresos":{'fecha':date.today().strftime("%Y-%m-%d")},
+        "transferencias":{'fecha':date.today().strftime("%Y-%m-%d")}
+    }
+    default_values=default_values.get(table_name,'')
+    return default_values
