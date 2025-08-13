@@ -116,11 +116,13 @@
                                 </select>
                             {% else %}
                                 {% if "fecha" in column %}
-                                <!-- Campo de fecha -->
-                                <input type="date" id="{{ column }}" name="{{ column }}" value="{{record[column] if record else default_variable_values[column] }}" class="form-input rounded-lg w-full" {% if column in required_fields %} required {% endif %}>
+                                    <!-- Campo de fecha -->
+                                    <input type="date" id="{{ column }}" name="{{ column }}" value="{{record[column] if record else default_variable_values[column] }}" class="form-input rounded-lg" style="width:15%" {% if column in required_fields %} required {% endif %}>
+                                {% elif "hora" in column %}
+                                    <input type="time" id="{{ column }}" name="{{ column }}" value="{{record[column] if record else default_variable_values[column] }}" class="form-input rounded-lg" style="width:15%"  {% if column in required_fields %} required {% endif %}>
                                 {% else %}
                                 <!-- Campo de texto normal -->
-                                <input type="text" id="{{ column }}" name="{{ column }}" value="{{record[column] if record else default_variable_values[column]}}"class="form-input rounded-lg w-full" {% if column in required_fields %} required {% endif %}>
+                                    <input type="text" id="{{ column }}" name="{{ column }}" value="{{record[column] if record else default_variable_values[column]}}"class="form-input rounded-lg"  {% if column in required_fields %} required {% endif %}>
                                 {% endif %}
                             {% endif %}
                         {% endif %}
@@ -262,6 +264,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 {% if javascript %}
-    <script src="/static/js/forms_validations/transferencias_de_inventario.js"></script>
+    <script src="{{ url_for('static', filename='js/forms_validations/%s.js' % table_name) }}"></script>
 {% endif %}
 {% endblock content %}
